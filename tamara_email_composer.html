@@ -1,0 +1,262 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.composer { max-width: 640px; display: flex; flex-direction: column; gap: 16px; padding: 8px 0; }
+.section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--color-text-secondary); margin-bottom: 10px; }
+.card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 20px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.field:last-child { margin-bottom: 0; }
+.field label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
+.field input, .field select, .field textarea { font-size: 13px; }
+.field textarea { resize: vertical; min-height: 60px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ai-btn { width: 100%; padding: 11px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--color-text-primary); color: var(--color-background-primary); border: none; border-radius: var(--border-radius-md); transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.ai-btn:hover { opacity: 0.85; }
+.ai-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.loading-bar { width: 100%; height: 3px; background: var(--color-background-secondary); border-radius: 2px; overflow: hidden; display: none; }
+.loading-bar.on { display: block; }
+.loading-fill { height: 100%; width: 0%; background: var(--color-text-primary); transition: width 0.4s; }
+
+.email-preview { display: none; }
+.email-preview.on { display: flex; flex-direction: column; gap: 0; }
+.preview-header { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 14px 16px; margin-bottom: 12px; }
+.meta-row { display: flex; gap: 8px; font-size: 13px; margin-bottom: 4px; }
+.meta-row:last-child { margin-bottom: 0; }
+.meta-key { color: var(--color-text-secondary); min-width: 52px; }
+.meta-val { color: var(--color-text-primary); font-weight: 500; word-break: break-all; }
+.subject-edit { width: 100%; font-size: 13px; font-weight: 500; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 6px 10px; background: var(--color-background-primary); color: var(--color-text-primary); margin-top: 2px; }
+.body-edit { width: 100%; font-size: 13px; line-height: 1.8; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 14px 16px; background: var(--color-background-primary); color: var(--color-text-primary); resize: vertical; min-height: 280px; font-family: var(--font-sans); }
+.body-edit:focus { outline: none; border-color: var(--color-border-primary); }
+
+.action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.action-btn { font-size: 12px; padding: 8px 16px; cursor: pointer; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); color: var(--color-text-primary); display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); }
+.action-btn:hover { background: var(--color-background-tertiary); }
+.action-btn.primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+.action-btn.primary:hover { opacity: 0.85; }
+
+.tip-row { display: flex; gap: 8px; align-items: flex-start; padding: 12px 14px; background: var(--color-background-info); border-radius: var(--border-radius-md); font-size: 12px; color: var(--color-text-info); line-height: 1.6; }
+
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--color-text-primary); color: var(--color-background-primary); font-size: 13px; padding: 10px 20px; border-radius: var(--border-radius-md); display: none; z-index: 999; white-space: nowrap; }
+.toast.on { display: block; }
+
+.template-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.pill { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); color: var(--color-text-secondary); cursor: pointer; }
+.pill:hover, .pill.on { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
+
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-text-primary); color: var(--color-background-primary); font-size: 11px; font-weight: 500; flex-shrink: 0; }
+</style>
+
+<div class="composer">
+
+  <div>
+    <p class="section-label">Step 1 — Fill in brand info</p>
+    <div class="card">
+      <div class="grid2">
+        <div class="field">
+          <label>Brand name *</label>
+          <input type="text" id="bname" placeholder="e.g. Glow Recipe" />
+        </div>
+        <div class="field">
+          <label>Their email *</label>
+          <input type="email" id="bemail" placeholder="e.g. pr@glowrecipe.com" />
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Brand type</label>
+          <select id="btype">
+            <option value="wig">Wig / hair brand</option>
+            <option value="beauty">Beauty / skincare</option>
+            <option value="makeup">Makeup / cosmetics</option>
+            <option value="fashion">Fashion / clothing</option>
+            <option value="lifestyle">Lifestyle / wellness</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>What you want</label>
+          <select id="bgoal">
+            <option value="free">Free PR / gifted product</option>
+            <option value="commission">Commission / affiliate deal</option>
+            <option value="paid">Paid collaboration</option>
+            <option value="any">Open to anything</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Something specific you like about them (optional but powerful)</label>
+        <input type="text" id="bdetail" placeholder="e.g. their watermelon glow serum, love how natural their wigs look..." />
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Step 2 — Pick a tone</p>
+    <div class="template-pills">
+      <button class="pill on" onclick="setTone('warm', this)">Warm &amp; friendly</button>
+      <button class="pill" onclick="setTone('professional', this)">Professional</button>
+      <button class="pill" onclick="setTone('bold', this)">Bold &amp; confident</button>
+      <button class="pill" onclick="setTone('casual', this)">Super casual</button>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">Step 3 — Generate your email</p>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button class="ai-btn" id="gen-btn" onclick="generateEmail()">
+        <i class="ti ti-sparkles" aria-hidden="true"></i> Write my email with AI
+      </button>
+      <div class="loading-bar" id="load-bar"><div class="loading-fill" id="load-fill"></div></div>
+    </div>
+  </div>
+
+  <div class="email-preview" id="preview">
+    <p class="section-label">Step 4 — Review, edit &amp; send</p>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="preview-header">
+        <div class="meta-row"><span class="meta-key">To:</span><span class="meta-val" id="prev-to">—</span></div>
+        <div class="meta-row"><span class="meta-key">Subject:</span><input class="subject-edit" id="prev-subj" type="text" /></div>
+      </div>
+      <textarea class="body-edit" id="prev-body"></textarea>
+      <div class="tip-row">
+        <i class="ti ti-info-circle" style="font-size:16px;flex-shrink:0;margin-top:1px" aria-hidden="true"></i>
+        <span>Edit anything above before sending. Add 2–3 of your best video links at the bottom as examples of your work.</span>
+      </div>
+      <div class="action-row">
+        <button class="action-btn primary" onclick="openGmail()"><i class="ti ti-mail" aria-hidden="true"></i> Open in Gmail</button>
+        <button class="action-btn" onclick="copyAll()"><i class="ti ti-copy" aria-hidden="true"></i> Copy email</button>
+        <button class="action-btn" onclick="generateEmail()"><i class="ti ti-refresh" aria-hidden="true"></i> Rewrite</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="section-label">How to send it</p>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span class="step-num">1</span>
+        <p style="font-size:13px;color:var(--color-text-primary);line-height:1.6">Fill in the brand name + their email above, pick your tone, and hit <strong>Write my email with AI</strong>.</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span class="step-num">2</span>
+        <p style="font-size:13px;color:var(--color-text-primary);line-height:1.6">Read it over — personalize anything that doesn't feel like you. Add 2–3 links to your best TikToks or Reels at the bottom.</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span class="step-num">3</span>
+        <p style="font-size:13px;color:var(--color-text-primary);line-height:1.6">Click <strong>Open in Gmail</strong> — it will pre-fill the To, Subject, and body. Just hit send from your Gmail.</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:flex-start;">
+        <span class="step-num">4</span>
+        <p style="font-size:13px;color:var(--color-text-primary);line-height:1.6">Go back to your Outreach Tracker and mark them as <em>Sent</em>. Follow up in 7–10 days if no reply.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let tone = 'warm';
+function setTone(t, el) {
+  tone = t;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  setTimeout(() => t.classList.remove('on'), 2500);
+}
+
+let lastSubj = '', lastBody = '', lastTo = '';
+
+async function generateEmail() {
+  const name = document.getElementById('bname').value.trim();
+  const email = document.getElementById('bemail').value.trim();
+  const type = document.getElementById('btype').value;
+  const goal = document.getElementById('bgoal').value;
+  const detail = document.getElementById('bdetail').value.trim();
+
+  if (!name) { document.getElementById('bname').focus(); showToast('Enter a brand name first'); return; }
+
+  const btn = document.getElementById('gen-btn');
+  const bar = document.getElementById('load-bar');
+  const fill = document.getElementById('load-fill');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader" aria-hidden="true"></i> Writing your pitch...';
+  bar.classList.add('on');
+  let w = 0;
+  const iv = setInterval(() => { w = Math.min(w + Math.random() * 12, 88); fill.style.width = w + '%'; }, 350);
+
+  const typeMap = { wig: 'wig/hair brand', beauty: 'beauty/skincare brand', makeup: 'makeup/cosmetics brand', fashion: 'fashion brand', lifestyle: 'lifestyle/wellness brand' };
+  const goalMap = { free: 'gifted/free PR products', commission: 'a commission or affiliate deal', paid: 'a paid collaboration', any: 'free PR, commission, or paid — open to anything' };
+  const toneMap = { warm: 'warm, friendly, and genuine', professional: 'professional and polished', bold: 'bold, confident, and direct', casual: 'super casual and conversational like texting a friend' };
+
+  const detailLine = detail ? `She specifically wants to mention she loves: "${detail}".` : '';
+
+  const prompt = `Write a pitch email from Tamara Lincoln to ${name} (a ${typeMap[type]}). She is asking for ${goalMap[goal]}. Tone should be ${toneMap[tone]}. ${detailLine}
+
+About Tamara: She goes by @__deinfluencer_ on TikTok and Instagram, @De_Influencerr on YouTube, and Tamara Lincoln on Facebook. She's a lifestyle/entertainment creator from Michigan with 1,116 TikTok followers, 190K TikTok views over the past year, 3,513 Instagram followers, 58K Instagram views in 60 days, 2,400 Facebook followers, and 829 YouTube subscribers. Her viral content has gotten 19K+ views. She offers 2 TikTok videos, 1 Instagram Reel (cross-posted to Facebook), YouTube unboxing/review, a 5-star review, and bio link for 30 days.
+
+Write ONLY the email body — no subject line inside the body. Keep it under 180 words. End with:
+Tamara Lincoln
+@__deinfluencer_ | TikTok & Instagram
+tamaradon40@gmail.com
+
+Also on a new line at the very end write: SUBJECT: [your suggested subject line for this email]`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    let full = data.content?.[0]?.text || '';
+
+    let subj = `Collaboration inquiry — Tamara Lincoln x ${name}`;
+    const subjMatch = full.match(/SUBJECT:\s*(.+)/);
+    if (subjMatch) { subj = subjMatch[1].trim(); full = full.replace(/SUBJECT:\s*.+/, '').trim(); }
+
+    clearInterval(iv); fill.style.width = '100%';
+    setTimeout(() => { bar.classList.remove('on'); fill.style.width = '0%'; }, 400);
+
+    lastTo = email; lastSubj = subj; lastBody = full;
+
+    document.getElementById('prev-to').textContent = email || '[paste brand email here]';
+    document.getElementById('prev-subj').value = subj;
+    document.getElementById('prev-body').value = full;
+    document.getElementById('preview').classList.add('on');
+    document.getElementById('preview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    clearInterval(iv); bar.classList.remove('on');
+    showToast('Something went wrong — try again');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="ti ti-sparkles" aria-hidden="true"></i> Write my email with AI';
+}
+
+function openGmail() {
+  const to = document.getElementById('bemail').value.trim() || '';
+  const subj = encodeURIComponent(document.getElementById('prev-subj').value);
+  const body = encodeURIComponent(document.getElementById('prev-body').value);
+  const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}&su=${subj}&body=${body}`;
+  window.open(url, '_blank');
+}
+
+function copyAll() {
+  const subj = document.getElementById('prev-subj').value;
+  const body = document.getElementById('prev-body').value;
+  const to = document.getElementById('prev-to').textContent;
+  const full = `To: ${to}\nSubject: ${subj}\n\n${body}`;
+  navigator.clipboard.writeText(full).then(() => showToast('Copied to clipboard!')).catch(() => showToast('Select and copy manually'));
+}
+</script>

@@ -1,0 +1,181 @@
+<div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border:0.5px solid var(--color-border-tertiary); border-radius:var(--border-radius-lg) var(--border-radius-lg) 0 0; background:var(--color-background-secondary);">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <div style="width:36px; height:36px; border-radius:var(--border-radius-md); background:var(--color-background-info); display:flex; align-items:center; justify-content:center;">
+      <i class="ti ti-shield-check" style="font-size:20px; color:var(--color-text-info);" aria-hidden="true"></i>
+    </div>
+    <div>
+      <p style="font-weight:500; font-size:15px; margin:0;">Total Coverage Academy Foundation</p>
+      <p style="font-size:12px; color:var(--color-text-secondary); margin:0;">Volunteer hours tracker</p>
+    </div>
+  </div>
+  <div style="text-align:right;">
+    <p style="font-size:12px; color:var(--color-text-secondary); margin:0;">Logged in as</p>
+    <p style="font-weight:500; font-size:14px; margin:0;">Tamara Lincoln</p>
+  </div>
+</div>
+
+<div style="border:0.5px solid var(--color-border-tertiary); border-top:none; border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg); padding:1.25rem; background:var(--color-background-primary);">
+
+  <div style="display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; margin-bottom:1.5rem;">
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem;">
+      <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 4px;">Roles</p>
+      <p style="font-size:16px; font-weight:500; margin:0;">Cheer coach / grant writer</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem;">
+      <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 4px;">Status</p>
+      <p style="font-size:16px; font-weight:500; margin:0;">Unpaid volunteer</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem;">
+      <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 4px;">Site</p>
+      <p style="font-size:16px; font-weight:500; margin:0;">Chosen Generations / remote</p>
+    </div>
+    <div style="background:var(--color-background-secondary); border-radius:var(--border-radius-md); padding:1rem;">
+      <p style="font-size:13px; color:var(--color-text-secondary); margin:0 0 4px;">Total hours logged</p>
+      <p style="font-size:16px; font-weight:500; margin:0;" id="total-hours">0 h</p>
+    </div>
+  </div>
+
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <i class="ti ti-calendar" style="font-size:18px; color:var(--color-text-secondary);" aria-hidden="true"></i>
+      <span style="font-size:15px; font-weight:500;" id="month-label">June 2026</span>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button id="prev-month" aria-label="Previous month"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+      <button id="next-month" aria-label="Next month"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div id="calendar-grid"></div>
+
+  <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:1rem; font-size:13px; color:var(--color-text-secondary);">
+    <div style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:var(--color-background-info); border:0.5px solid var(--color-border-info); display:inline-block;"></span>Cheer coach \u2013 Summer Discovery (8a-3p)</div>
+    <div style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:var(--color-background-success); border:0.5px solid var(--color-border-success); display:inline-block;"></span>Grant writer \u2013 TCA Foundation (5 hrs)</div>
+    <div style="display:flex; align-items:center; gap:6px;"><span style="width:12px; height:12px; border-radius:3px; background:var(--color-background-secondary); display:inline-block;"></span>No shift</div>
+  </div>
+
+  <div style="border-top:0.5px solid var(--color-border-tertiary); margin-top:1.25rem; padding-top:1rem; font-size:13px; color:var(--color-text-secondary);">
+    Monday\u2013Thursday: cheer coach for the TCA Summer Discovery vendor program (Semaj J. Morgan Foundation, Chosen Generations site). Fridays: grant writer for Total Coverage Academy Foundation (5 hours, not working as a vendor contractor). Ms. Lincoln is not currently receiving wages or a salary for this work; a one-time stipend may be issued at the end of the volunteer period.
+  </div>
+</div>
+
+<script>
+const months = {
+  "2026-6": { label: "June 2026", weeks: [
+    [0,1,2,3,4,5,6],
+    [7,8,9,10,11,12,13],
+    [14,15,16,17,18,19,20],
+    [21,22,23,24,25,26,27],
+    [28,29,30,0,0,0,0]
+  ]},
+  "2026-7": { label: "July 2026", weeks: [
+    [0,0,0,1,2,3,4],
+    [5,6,7,8,9,10,11],
+    [12,13,14,15,16,17,18],
+    [19,20,21,22,23,24,25],
+    [26,27,28,29,30,31,0]
+  ]},
+  "2026-8": { label: "August 2026", weeks: [
+    [0,0,0,0,0,0,1],
+    [2,3,4,5,6,7,8],
+    [9,10,11,12,13,14,15],
+    [16,17,18,19,20,21,22],
+    [23,24,25,26,27,28,29],
+    [30,31,0,0,0,0,0]
+  ]},
+  "2026-9": { label: "September 2026", weeks: [
+    [0,0,1,2,3,4,5],
+    [6,7,8,9,10,11,12],
+    [13,14,15,16,17,18,19],
+    [20,21,22,23,24,25,26],
+    [27,28,29,30,0,0,0]
+  ]}
+};
+const monthKeys = Object.keys(months);
+let monthIndex = 0;
+
+const START = new Date(2026, 5, 22);
+const END = new Date(2026, 8, 20);
+
+function inRange(date) {
+  return date >= START && date <= END;
+}
+
+function getShiftType(monthKey, day) {
+  if (!day) return null;
+  const [year, month] = monthKey.split('-').map(Number);
+  const date = new Date(year, month-1, day);
+  const dow = date.getDay();
+  if (dow === 0 || dow === 6) return null;
+  if (!inRange(date)) return null;
+  if (dow === 5) return 'grant';
+  return 'cheer';
+}
+
+function countHours() {
+  let cheerDays = 0;
+  let grantDays = 0;
+  for (const key of monthKeys) {
+    const m = months[key];
+    for (const week of m.weeks) {
+      for (const day of week) {
+        const t = getShiftType(key, day);
+        if (t === 'cheer') cheerDays++;
+        if (t === 'grant') grantDays++;
+      }
+    }
+  }
+  return cheerDays * 7 + grantDays * 5;
+}
+
+function render() {
+  const key = monthKeys[monthIndex];
+  const m = months[key];
+  document.getElementById('month-label').textContent = m.label;
+  document.getElementById('total-hours').textContent = countHours() + ' h';
+
+  const dayHeaders = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = '<div style="display:grid; grid-template-columns:repeat(7, minmax(0,1fr)); gap:4px;">';
+  for (const d of dayHeaders) {
+    html += '<div style="text-align:center; font-size:12px; font-weight:500; color:var(--color-text-secondary); padding:6px 0;">' + d + '</div>';
+  }
+  for (const week of m.weeks) {
+    for (const day of week) {
+      if (!day) {
+        html += '<div style="min-height:64px; border-radius:var(--border-radius-md);"></div>';
+        continue;
+      }
+      const t = getShiftType(key, day);
+      if (t === 'cheer') {
+        html += '<div style="min-height:64px; border-radius:var(--border-radius-md); background:var(--color-background-info); border:0.5px solid var(--color-border-info); padding:6px;">'
+          + '<div style="font-size:13px; font-weight:500; color:var(--color-text-info);">' + day + '</div>'
+          + '<div style="font-size:11px; color:var(--color-text-info); margin-top:4px;">8a-3p</div>'
+          + '</div>';
+      } else if (t === 'grant') {
+        html += '<div style="min-height:64px; border-radius:var(--border-radius-md); background:var(--color-background-success); border:0.5px solid var(--color-border-success); padding:6px;">'
+          + '<div style="font-size:13px; font-weight:500; color:var(--color-text-success);">' + day + '</div>'
+          + '<div style="font-size:11px; color:var(--color-text-success); margin-top:4px;">5 hrs</div>'
+          + '</div>';
+      } else {
+        html += '<div style="min-height:64px; border-radius:var(--border-radius-md); background:var(--color-background-secondary); padding:6px;">'
+          + '<div style="font-size:13px; color:var(--color-text-secondary);">' + day + '</div>'
+          + '</div>';
+      }
+    }
+  }
+  html += '</div>';
+  document.getElementById('calendar-grid').innerHTML = html;
+
+  document.getElementById('prev-month').disabled = monthIndex === 0;
+  document.getElementById('next-month').disabled = monthIndex === monthKeys.length - 1;
+}
+
+document.getElementById('prev-month').addEventListener('click', () => {
+  if (monthIndex > 0) { monthIndex--; render(); }
+});
+document.getElementById('next-month').addEventListener('click', () => {
+  if (monthIndex < monthKeys.length - 1) { monthIndex++; render(); }
+});
+
+render();
+</script>

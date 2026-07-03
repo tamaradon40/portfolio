@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tuesday — Virtual Coworking</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+:root {
+  --navy: #1F4566; --blue: #4A8FC2; --skyBg: #F0F8FE; --skyBorder: #D6EAFA;
+  --yellow: #FFC94A; --lemonBg: #FFFBF0; --lemonBorder: #F5E6B8;
+  --gray: #6B7B8C; --grayLight: #B4B2A9; --green: #4A7A2E; --greenBg: #E6F4D9;
+}
+body { background: #C9DDEF; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 24px 12px; }
+.phone { width: 390px; background: var(--skyBg); border-radius: 40px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.28); min-height: 720px; display: flex; flex-direction: column; border: 6px solid #0D2B42; }
+.topbar { background: var(--navy); padding: 16px 18px; display: flex; align-items: center; gap: 10px; }
+.topbar-logo { font-size: 18px; font-weight: 800; color: var(--yellow); letter-spacing: -0.5px; }
+.topbar-sub { font-size: 11px; color: #CADCFC; margin-top: 2px; }
+.avatar { border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; flex-shrink: 0; }
+.body { flex: 1; padding: 16px; overflow-y: auto; max-height: 560px; }
+.body::-webkit-scrollbar { width: 4px; } .body::-webkit-scrollbar-thumb { background: var(--skyBorder); border-radius: 4px; }
+.nav { background: #fff; border-top: 1px solid var(--skyBorder); display: flex; padding-bottom: 6px; }
+.nav-btn { flex: 1; padding: 10px 0 6px; background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: background .15s; border-radius: 0; }
+.nav-btn:hover { background: var(--skyBg); }
+.nav-btn .nav-emoji { font-size: 20px; }
+.nav-btn .nav-label { font-size: 9px; color: var(--gray); font-weight: 500; }
+.nav-btn.active { background: var(--skyBg); }
+.nav-btn.active .nav-label { color: var(--blue); font-weight: 700; }
+.card { background: #fff; border: 1px solid var(--skyBorder); border-radius: 14px; padding: 13px 15px; margin-bottom: 9px; }
+.card.clickable { cursor: pointer; transition: border-color .15s, transform .1s; }
+.card.clickable:hover { border-color: var(--blue); transform: translateY(-1px); }
+.card.lemon { background: var(--lemonBg); border-color: var(--lemonBorder); }
+.card.sky { background: var(--skyBg); border-color: var(--skyBorder); }
+.card.blue { background: var(--blue); border-color: var(--blue); }
+.card.navy { background: var(--navy); border-color: var(--navy); }
+.card.dashed { border-style: dashed; text-align: center; color: var(--gray); }
+.btn { border: none; border-radius: 9px; padding: 9px 16px; font-weight: 600; font-size: 13px; cursor: pointer; transition: opacity .15s, transform .1s; display: inline-block; }
+.btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.primary { background: var(--blue); color: #fff; }
+.btn.secondary { background: var(--skyBg); color: var(--navy); border: 1px solid var(--skyBorder); }
+.btn.yellow { background: var(--yellow); color: #1F3A0A; }
+.btn.danger { background: #FEE2E2; color: #991B1B; }
+.btn.full { width: 100%; text-align: center; display: block; }
+.tag { border-radius: 20px; padding: 3px 9px; font-size: 10px; font-weight: 700; display: inline-block; }
+.section-label { font-size: 11px; font-weight: 700; color: var(--gray); margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.field-label { font-size: 11px; color: var(--gray); display: block; margin-bottom: 5px; font-weight: 500; }
+input[type=text], input[type=date], input[type=time], input[type=password], select { width: 100%; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--skyBorder); font-size: 13px; outline: none; background: #fff; transition: border-color .15s; }
+input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(74,143,194,0.12); }
+.check-row { display: flex; gap: 9px; font-size: 12px; cursor: pointer; align-items: flex-start; margin-bottom: 9px; color: var(--navy); }
+.check-row input { width: auto; margin-top: 2px; accent-color: var(--blue); }
+.status-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.tabs { display: flex; gap: 6px; margin-bottom: 13px; background: var(--skyBg); padding: 4px; border-radius: 10px; }
+.tab { flex: 1; padding: 7px 0; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 12px; transition: background .15s, color .15s; background: transparent; color: var(--gray); }
+.tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 6px rgba(74,143,194,0.3); }
+.signin-wrap { min-height: 700px; background: var(--navy); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 28px 20px; border-radius: 34px; position: relative; overflow: hidden; }
+.signin-orb1 { position: absolute; width: 200px; height: 200px; border-radius: 50%; background: rgba(74,143,194,0.3); top: -60px; right: -60px; }
+.signin-orb2 { position: absolute; width: 140px; height: 140px; border-radius: 50%; background: rgba(255,196,74,0.15); bottom: -40px; left: -40px; }
+.signin-box { background: #fff; border-radius: 20px; padding: 26px; width: 100%; max-width: 310px; position: relative; z-index: 2; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+.video-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.video-tile { border-radius: 14px; padding: 16px 6px 12px; text-align: center; }
+.chat-box { background: var(--skyBg); border: 1px solid var(--skyBorder); border-radius: 12px; padding: 10px 12px; height: 110px; overflow-y: auto; margin-bottom: 9px; }
+.chat-box::-webkit-scrollbar { width: 3px; } .chat-box::-webkit-scrollbar-thumb { background: var(--skyBorder); border-radius: 3px; }
+.room-controls { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+.privacy-box { background: var(--skyBg); border: 1px solid var(--skyBorder); border-radius: 12px; padding: 11px 13px; display: flex; gap: 10px; align-items: flex-start; margin-bottom: 13px; }
+.home-room { background: var(--skyBg); border: 1px solid var(--skyBorder); border-radius: 14px; padding: 13px; margin-bottom: 12px; }
+.home-tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; margin-top: 10px; }
+.home-tile { background: #fff; border-radius: 10px; padding: 12px 6px; text-align: center; border: 1px solid var(--skyBorder); }
+.meeting-banner { background: var(--blue); border-radius: 14px; padding: 13px 15px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }
+.error-msg { color: #DC2626; font-size: 11px; margin-bottom: 10px; background: #FEE2E2; padding: 7px 10px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="phone" id="app"></div>
+
+<script>
+const C = { navy:"#1F4566", blue:"#4A8FC2", skyBg:"#F0F8FE", skyBorder:"#D6EAFA", yellow:"#FFC94A", lemonBg:"#FFFBF0", lemonBorder:"#F5E6B8", gray:"#6B7B8C", grayLight:"#B4B2A9", green:"#4A7A2E", greenBg:"#E6F4D9" };
+
+let screen = "signin";
+let roomMuted = true, roomCam = false;
+let spaceTab = "tasks", createTab = "task";
+let signStep = "login", ageErr = "";
+let chatMsgs = [
+  { who:"Marco", text:"Hey dropping in to work on the deck 💻", time:"2:47 PM" },
+  { who:"Jess", text:"Library is so quiet today, love it 📚", time:"2:49 PM" },
+];
+
+function go(s) { screen = s; render(); window.scrollTo(0,0); }
+
+function avatar(initials, color, size=32) {
+  return `<div class="avatar" style="width:${size}px;height:${size}px;background:${color};font-size:${Math.round(size*0.36)}px">${initials}</div>`;
+}
+
+function topbar(title, sub) {
+  return `<div class="topbar">
+    <div style="flex:1">
+      <div class="topbar-logo">Tuesday</div>
+      <div class="topbar-sub">${title} &middot; ${sub}</div>
+    </div>
+    ${avatar("AN", C.blue, 34)}
+  </div>`;
+}
+
+function nav() {
+  const tabs = [
+    {id:"home", e:"🏠", l:"Home"}, {id:"spaces", e:"🗺️", l:"Spaces"}, {id:"space", e:"🏢", l:"Studio"},
+    {id:"create", e:"➕", l:"Create"}, {id:"room", e:"🎥", l:"Room"}
+  ];
+  return `<div class="nav">${tabs.map(t=>`<button class="nav-btn ${screen===t.id?'active':''}" onclick="go('${t.id}')"><span class="nav-emoji">${t.e}</span><span class="nav-label">${t.l}</span></button>`).join("")}</div>`;
+}
+
+// ── Sign In ──────────────────────────────────────────────────────────────────
+function renderSignIn() {
+  let inner = "";
+  if (signStep === "login") {
+    inner = `<p style="font-weight:800;font-size:17px;color:${C.navy};margin:0 0 5px">Welcome back</p>
+    <p style="font-size:12px;color:${C.gray};margin:0 0 20px">Sign in to enter your spaces</p>
+    <button class="btn secondary full" style="margin-bottom:12px" onclick="signStep='age';render()">
+      <span style="display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-size:16px">🔵</span> Continue with Google</span>
+    </button>
+    <p style="font-size:10px;color:${C.grayLight};text-align:center;line-height:1.5">18+ only &middot; anonymous by default<br>your email is never shown to anyone</p>`;
+  } else if (signStep === "age") {
+    inner = `<p style="font-weight:800;font-size:17px;color:${C.navy};margin:0 0 5px">Confirm your age</p>
+    <p style="font-size:12px;color:${C.gray};margin:0 0 16px">Tuesday is for adults 18 and older</p>
+    <label class="field-label">Date of birth</label>
+    <input type="date" id="dob" style="margin-bottom:10px" />
+    ${ageErr?`<div class="error-msg">${ageErr}</div>`:""}
+    <button class="btn primary full" onclick="checkAge()">Continue &rarr;</button>`;
+  } else if (signStep === "privacy") {
+    inner = `<p style="font-weight:800;font-size:17px;color:${C.navy};margin:0 0 5px">Set up your identity</p>
+    <p style="font-size:12px;color:${C.gray};margin:0 0 16px">Choose how others see you in rooms</p>
+    <label class="field-label">Display name</label>
+    <input type="text" placeholder="e.g. Maya R, or a nickname" style="margin-bottom:13px" />
+    <label class="check-row"><input type="checkbox" checked /> Hide my email from other users</label>
+    <label class="check-row"><input type="checkbox" /> Blur my video background by default</label>
+    <label class="check-row" style="margin-bottom:16px"><input type="checkbox" /> Use an avatar instead of live video</label>
+    <button class="btn primary full" onclick="go('home')">Enter Tuesday &rarr;</button>`;
+  }
+  return `<div class="signin-wrap">
+    <div class="signin-orb1"></div>
+    <div class="signin-orb2"></div>
+    <div style="text-align:center;margin-bottom:24px;position:relative;z-index:2">
+      <div style="font-size:38px;font-weight:800;color:${C.yellow};letter-spacing:-1px">Tuesday</div>
+      <div style="font-size:13px;color:#CADCFC;margin-top:6px">Show up to work, on your own terms.</div>
+    </div>
+    <div class="signin-box">${inner}</div>
+  </div>`;
+}
+
+function checkAge() {
+  const d = document.getElementById("dob")?.value;
+  if (!d) { ageErr = "Please enter your date of birth."; render(); return; }
+  const age = Math.floor((Date.now() - new Date(d)) / (365.25*24*3600*1000));
+  if (age < 18) { ageErr = "You must be 18 or older to use Tuesday."; render(); return; }
+  ageErr = ""; signStep = "privacy"; render();
+}
+
+// ── Home ─────────────────────────────────────────────────────────────────────
+function renderHome() {
+  const people = [
+    { i:"JE", name:"Jess", where:"Library &middot; quiet", online:true, color:C.yellow },
+    { i:"MR", name:"Marco (Acme Studio)", where:"Cowork space", online:true, color:C.blue },
+    { i:"PK", name:"Priya", where:"Offline since 2pm", online:false, color:C.grayLight },
+  ];
+  return `${topbar("Your room","Quiet here &middot; just you")}
+  <div class="body">
+    <div class="home-room">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700;font-size:13px;color:${C.navy}">My home</span>
+        <button class="btn yellow" style="padding:5px 12px;font-size:11px" onclick="go('space')">Customize</button>
+      </div>
+      <div class="home-tiles">
+        ${[["🪟","Window"],["🖥️","Desk"],["🪴","Plant"]].map(([e,l])=>`<div class="home-tile"><div style="font-size:22px">${e}</div><div style="font-size:10px;color:${C.gray};margin-top:4px">${l}</div></div>`).join("")}
+      </div>
+    </div>
+    <div style="margin-bottom:13px">
+      <label class="field-label">Your status</label>
+      <select><option>🟢 Available</option><option>🎧 Focusing, do not disturb</option><option>📞 On a call</option><option>💤 Away</option></select>
+    </div>
+    <p class="section-label">Who's around</p>
+    ${people.map(p=>`<div class="card lemon" style="display:flex;align-items:center;gap:10px;padding:10px 13px">
+      ${avatar(p.i, p.color, 30)}
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:${C.navy}">${p.name}</div>
+        <div style="font-size:11px;color:${C.gray};margin-top:1px">${p.where}</div>
+      </div>
+      <div class="status-dot" style="background:${p.online?C.green:C.grayLight}"></div>
+    </div>`).join("")}
+    <button class="btn primary full" style="margin-top:8px" onclick="go('spaces')">View all my spaces &rarr;</button>
+  </div>${nav()}`;
+}
+
+// ── Spaces ────────────────────────────────────────────────────────────────────
+function renderSpaces() {
+  return `${topbar("Good afternoon","Where do you want to work?")}
+  <div class="body">
+    <p class="section-label">My spaces</p>
+    ${[{n:"Me &amp; Jess",c:"2 people",o:"1 online",e:"👭"},{n:"Acme Studio",c:"5 people",o:"3 online",e:"🏢"}].map(s=>`
+    <div class="card lemon clickable" style="display:flex;align-items:center;gap:12px" onclick="go('space')">
+      <span style="font-size:24px">${s.e}</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:14px;color:${C.navy}">${s.n}</div>
+        <div style="font-size:11px;color:${C.gray};margin-top:2px">${s.c} &middot; private</div>
+      </div>
+      <span class="tag" style="background:${C.greenBg};color:${C.green}">${s.o}</span>
+    </div>`).join("")}
+    <div class="card dashed" style="padding:16px 12px" onclick="alert('Create a new space — invite people you know!')">
+      <div style="font-size:20px;margin-bottom:4px">＋</div>
+      <div style="font-size:13px;font-weight:600">New space</div>
+      <div style="font-size:11px;margin-top:2px">Invite people you know</div>
+    </div>
+    <p class="section-label" style="margin-top:16px">Explore public rooms</p>
+    ${[
+      {n:"Sales floor",s:"High energy",c:"8 here",e:"⚡",bg:C.blue,dark:true},
+      {n:"Campus library",s:"Quiet, focus work",c:"23 here",e:"📚",bg:C.lemonBg,dark:false},
+      {n:"Lounge",s:"Casual chat",c:"14 here",e:"☕",bg:C.blue,dark:true},
+    ].map(r=>`
+    <div class="card clickable" style="display:flex;align-items:center;gap:12px;background:${r.bg};border-color:${r.bg};margin-bottom:8px" onclick="go('room')">
+      <span style="font-size:22px">${r.e}</span>
+      <div style="flex:1">
+        <div style="font-weight:700;font-size:13px;color:${r.dark?'#fff':C.navy}">${r.n}</div>
+        <div style="font-size:11px;color:${r.dark?'#CADCFC':C.gray};margin-top:2px">${r.s}</div>
+      </div>
+      <span class="tag" style="background:rgba(255,255,255,0.2);color:${r.dark?'#fff':C.navy}">${r.c}</span>
+    </div>`).join("")}
+    <p style="font-size:11px;color:${C.grayLight};margin-top:6px">🔒 In public rooms you appear as "Anon Newt" — fully anonymous</p>
+  </div>${nav()}`;
+}
+
+// ── Space (Acme Studio) ───────────────────────────────────────────────────────
+function renderSpace() {
+  const tasks = [
+    {t:"Finalize client deck",d:"Due today &middot; in progress",w:"MR",c:C.blue,done:false},
+    {t:"Review Q3 budget",d:"Due tomorrow &middot; not started",w:"PK",c:C.grayLight,done:false},
+    {t:"Send vendor invoices",d:"Done yesterday",w:"JE",c:C.yellow,done:true},
+  ];
+  const meetings = [
+    {n:"Weekly standup",w:"Today &middot; 3:00 PM",r:"Cowork space",who:["MR","JE","PK"]},
+    {n:"Q3 budget review",w:"Tomorrow &middot; 10:00 AM",r:"Lounge",who:["PK","MR"]},
+  ];
+  return `${topbar("Acme Studio","5 people &middot; 3 online")}
+  <div class="body">
+    <div class="meeting-banner">
+      <div>
+        <div style="font-weight:700;font-size:14px;color:#fff">Weekly standup</div>
+        <div style="font-size:11px;color:#CADCFC;margin-top:2px">Cowork space &middot; starts in 12 min</div>
+      </div>
+      <button class="btn yellow" style="padding:7px 14px;font-size:12px" onclick="go('room')">Join &rarr;</button>
+    </div>
+    <div class="tabs">
+      <button class="tab ${spaceTab==='tasks'?'active':''}" onclick="spaceTab='tasks';render()">Tasks</button>
+      <button class="tab ${spaceTab==='meetings'?'active':''}" onclick="spaceTab='meetings';render()">Meetings</button>
+    </div>
+    ${spaceTab==='tasks'?`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <span class="section-label" style="margin:0">Shared tasks</span>
+      <button class="btn yellow" style="padding:4px 10px;font-size:11px" onclick="go('create')">＋ New</button>
+    </div>
+    ${tasks.map(t=>`<div class="card lemon" style="display:flex;align-items:center;gap:11px;padding:10px 13px">
+      <input type="checkbox" ${t.done?'checked':''} style="width:auto;flex-shrink:0;accent-color:${C.blue};width:15px;height:15px" />
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:${C.navy};text-decoration:${t.done?'line-through':'none'};opacity:${t.done?'0.45':'1'}">${t.t}</div>
+        <div style="font-size:10px;color:${C.gray};margin-top:2px">${t.d}</div>
+      </div>
+      ${avatar(t.w,t.c,26)}
+    </div>`).join("")}`:`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <span class="section-label" style="margin:0">Scheduled meetings</span>
+      <button class="btn yellow" style="padding:4px 10px;font-size:11px" onclick="go('create')">＋ New</button>
+    </div>
+    ${meetings.map(m=>`<div class="card lemon" style="margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:${C.navy}">${m.n}</div>
+          <div style="font-size:11px;color:${C.gray};margin-top:2px">${m.w} &middot; ${m.r}</div>
+        </div>
+        <button class="btn primary" style="padding:5px 12px;font-size:11px" onclick="go('room')">Join</button>
+      </div>
+      <div style="display:flex;gap:5px">${m.who.map(w=>avatar(w,C.blue,24)).join("")}</div>
+    </div>`).join("")}`}
+    <p class="section-label" style="margin-top:14px">Who's in a room now</p>
+    ${[{n:"Marco",w:"Cowork space",i:"MR"},{n:"Jess",w:"Library",i:"JE"}].map(p=>`
+    <div class="card sky clickable" style="display:flex;align-items:center;gap:11px;padding:10px 13px" onclick="go('room')">
+      ${avatar(p.i,C.blue,28)}
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:${C.navy}">${p.n}</div>
+        <div style="font-size:11px;color:${C.gray};margin-top:1px">${p.w}</div>
+      </div>
+      <div class="status-dot" style="background:${C.green}"></div>
+    </div>`).join("")}
+  </div>${nav()}`;
+}
+
+// ── Create ────────────────────────────────────────────────────────────────────
+function renderCreate() {
+  return `${topbar("Create","Add to Acme Studio")}
+  <div class="body">
+    <div class="tabs">
+      <button class="tab ${createTab==='task'?'active':''}" onclick="createTab='task';render()">New task</button>
+      <button class="tab ${createTab==='meeting'?'active':''}" onclick="createTab='meeting';render()">New meeting</button>
+    </div>
+    ${createTab==='task'?`
+    <label class="field-label">Task name</label>
+    <input type="text" placeholder="e.g. Finalize client deck" style="margin-bottom:11px" />
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px">
+      <div><label class="field-label">Assign to</label><select><option>Me</option><option>Marco</option><option>Jess</option><option>Priya</option></select></div>
+      <div><label class="field-label">Due date</label><input type="date" /></div>
+    </div>
+    <div class="privacy-box">
+      <span style="font-size:18px">🔒</span>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:${C.navy}">Private to Acme Studio</div>
+        <div style="font-size:11px;color:${C.gray};margin-top:2px">Tasks never appear in public rooms or to outside users</div>
+      </div>
+    </div>
+    <button class="btn primary full" onclick="go('space')">Create task</button>`:`
+    <label class="field-label">Meeting name</label>
+    <input type="text" placeholder="e.g. Weekly standup" style="margin-bottom:11px" />
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px">
+      <div><label class="field-label">Room</label><select><option>Cowork space</option><option>Lounge</option><option>Library (silent)</option><option>Home (private)</option></select></div>
+      <div><label class="field-label">Time</label><input type="time" /></div>
+    </div>
+    <label class="field-label">Who's invited</label>
+    <select style="margin-bottom:13px"><option>Everyone in Acme Studio</option><option>Just me &amp; Marco</option><option>Custom...</option></select>
+    <label class="check-row"><input type="checkbox" checked /> Mute mic and camera by default on entry</label>
+    <label class="check-row"><input type="checkbox" checked /> Invite-only: block non-invited people from joining</label>
+    <label class="check-row" style="margin-bottom:16px"><input type="checkbox" /> Show my real name to this group (overrides anonymous mode)</label>
+    <button class="btn primary full" onclick="go('space')">Schedule meeting</button>`}
+  </div>${nav()}`;
+}
+
+// ── Room ──────────────────────────────────────────────────────────────────────
+function renderRoom() {
+  const tiles = [
+    {n:"You",i:"AN",c:C.blue},
+    {n:"Marco",i:"MR",c:C.yellow},
+    {n:"Jess",i:"JE",c:"#5BAD6A"},
+  ];
+  return `${topbar("Weekly standup","Cowork space &middot; 3 here")}
+  <div class="body" style="padding:12px 13px 10px">
+    <div class="video-grid">
+      ${tiles.map(t=>`<div class="video-tile" style="background:${t.c}">
+        ${avatar(t.i,"rgba(255,255,255,0.22)",36)}
+        <div style="font-size:11px;font-weight:700;color:#fff;margin-top:9px">${t.n}</div>
+        ${t.n==="You"?`<div style="margin-top:5px"><span class="tag" style="background:rgba(0,0,0,0.25);color:#fff;font-size:9px">${roomMuted?"🔇 Muted":"🎤 Live"}</span></div>`:`<div style="margin-top:5px"><span class="tag" style="background:rgba(0,0,0,0.25);color:#fff;font-size:9px">${t.n==="Marco"?"🎤 Live":"🔇 Muted"}</span></div>`}
+      </div>`).join("")}
+    </div>
+    <div class="chat-box" id="chat">
+      ${chatMsgs.map(m=>`<div style="margin-bottom:7px">
+        <span style="font-weight:700;font-size:11px;color:${C.navy}">${m.who}</span>
+        <span style="font-size:9px;color:${C.grayLight};margin-left:5px">${m.time}</span>
+        <div style="font-size:12px;color:${C.gray};margin-top:2px">${m.text}</div>
+      </div>`).join("")}
+    </div>
+    <div style="display:flex;gap:7px;margin-bottom:9px">
+      <input type="text" id="chatinput" placeholder="Message the room..." style="flex:1;font-size:12px;padding:8px 11px"
+        onkeydown="if(event.key==='Enter')sendChat()" />
+      <button class="btn primary" style="padding:8px 13px;font-size:12px;white-space:nowrap" onclick="sendChat()">Send</button>
+    </div>
+    <div class="room-controls">
+      <button class="btn ${roomMuted?'secondary':'primary'}" style="padding:9px 0;font-size:11px" onclick="roomMuted=!roomMuted;render()">${roomMuted?"🔇 Muted":"🎤 Live"}</button>
+      <button class="btn ${roomCam?'primary':'secondary'}" style="padding:9px 0;font-size:11px" onclick="roomCam=!roomCam;render()">${roomCam?"📷 Cam on":"📷 Cam off"}</button>
+      <button class="btn danger" style="padding:9px 0;font-size:11px" onclick="go('space')">Leave room</button>
+    </div>
+  </div>${nav()}`;
+}
+
+function sendChat() {
+  const inp = document.getElementById("chatinput");
+  if (!inp || !inp.value.trim()) return;
+  chatMsgs.push({ who:"You", text: inp.value, time:"now" });
+  inp.value = "";
+  render();
+  setTimeout(() => { const c = document.getElementById("chat"); if(c) c.scrollTop = c.scrollHeight; }, 50);
+}
+
+function render() {
+  const el = document.getElementById("app");
+  if (!el) return;
+  const map = { signin: renderSignIn, home: renderHome, spaces: renderSpaces, space: renderSpace, create: renderCreate, room: renderRoom };
+  el.innerHTML = (map[screen] || renderHome)();
+  if (screen === "room") {
+    const c = document.getElementById("chat");
+    if(c) c.scrollTop = c.scrollHeight;
+  }
+}
+
+render();
+</script>
+</body>
+</html>

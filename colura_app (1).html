@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colura — Creator Outreach App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f7f3ee;--bg2:#f0ebe3;--bg3:#e8e0d4;
+  --card:#faf7f3;--border:#e0d8cc;
+  --text:#2c2418;--text2:#7a6e62;--text3:#b0a898;
+  --nude:#c9956a;--nude-d:#a5764f;--nude-bg:#f5e8dc;
+  --mint:#5a8a6a;--mint-l:#c4d9c8;--mint-d:#3a6a4a;--mint-bg:#eaf2ec;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text)}
+nav{background:var(--card);border-bottom:2px solid var(--mint-l);padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;height:54px}
+.logo{font-size:22px;font-weight:300;letter-spacing:2px;color:var(--text);text-transform:lowercase}
+.logo span{color:var(--mint);font-weight:600}
+.logo-sub{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mint)}
+.nav-tabs{display:flex;gap:2px}
+.nav-tab{background:none;border:none;padding:7px 12px;font-size:12px;color:var(--text2);cursor:pointer;border-radius:8px;font-family:inherit;letter-spacing:0.5px;transition:all 0.15s;white-space:nowrap}
+.nav-tab:hover{background:var(--bg2);color:var(--text)}
+.nav-tab.on{background:var(--mint-bg);color:var(--mint-d);font-weight:600}
+.page{display:none;max-width:900px;margin:0 auto;padding:32px 20px 80px}
+.page.on{display:block}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+.slbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--mint);margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px}
+.ctitle{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--mint);margin-bottom:16px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bg3);font-size:14px}
+.row:last-child{border-bottom:none}
+.rkey{color:var(--text2)}.rval{color:var(--text);font-weight:500}
+.badge{background:var(--mint-bg);color:var(--mint-d);font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase;letter-spacing:0.8px}
+.field input,.field select,.field textarea{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-size:13px;font-family:inherit;transition:border 0.15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--mint)}
+.field input::placeholder,.field textarea::placeholder{color:var(--text3)}
+.field textarea{resize:vertical;min-height:100px}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.pill{background:var(--bg);border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:30px;cursor:pointer;font-size:12px;font-family:inherit;transition:all 0.15s}
+.pill.on,.pill:hover{background:var(--mint);border-color:var(--mint);color:#fff}
+.btn{padding:11px 22px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;border:none}
+.btn-mint{background:var(--mint);color:#fff}
+.btn-mint:hover{background:var(--mint-d)}
+.btn-nude{background:var(--nude);color:#fff}
+.btn-nude:hover{background:var(--nude-d)}
+.btn-outline{background:var(--bg);border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--mint);color:var(--mint-d);background:var(--mint-bg)}
+.btn-full{width:100%}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 16px}
+.stat-num{font-size:28px;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.stat-trend{font-size:11px;color:var(--mint);margin-top:4px;font-weight:600}
+.tip{background:var(--mint-bg);color:var(--mint-d);font-size:12px;padding:10px 14px;border-radius:8px;margin-top:10px;line-height:1.6}
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+/* HOME */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pipe-step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center}
+.pipe-num{font-size:22px;font-weight:700;color:var(--mint-d)}
+.pipe-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:0.8px;margin-top:4px}
+.rem-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--bg3);font-size:13px}
+.rem-row:last-child{border-bottom:none}
+.rem-brand{font-weight:600}
+.days{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600}
+.d-urgent{background:#fdecea;color:#c0392b}
+.d-ok{background:var(--nude-bg);color:var(--nude-d)}
+.d-good{background:var(--mint-bg);color:var(--mint-d)}
+/* BRANDS */
+.search-bar{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:11px 16px;font-size:14px;width:100%;font-family:inherit;color:var(--text);margin-bottom:14px}
+.search-bar:focus{outline:none;border-color:var(--mint)}
+.brand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.brand-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;cursor:pointer;transition:all 0.15s}
+.brand-card:hover{border-color:var(--mint);transform:translateY(-1px)}
+.brand-card.selected{border-color:var(--mint);background:var(--mint-bg)}
+.brand-name{font-size:14px;font-weight:600;margin-bottom:4px}
+.brand-niche{font-size:11px;color:var(--mint);font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px}
+.brand-email{font-size:11px;color:var(--text3);word-break:break-all}
+/* EMAIL */
+.email-preview{display:none}
+.email-preview.on{display:block}
+.email-meta{background:var(--bg2);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.email-meta-row{font-size:13px;color:var(--text2);margin-bottom:3px}
+.email-meta-row span{color:var(--text);font-weight:600}
+.email-body-edit{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;font-size:13px;line-height:1.85;color:var(--text);white-space:pre-line;min-height:240px;outline:none;font-family:inherit}
+.email-body-edit:focus{border-color:var(--mint)}
+/* TRACKER */
+.thead{display:grid;grid-template-columns:2fr 2fr 1.4fr 1fr;gap:8px;padding:10px 14px;background:var(--bg2);border-radius:10px;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3);margin-bottom:8px}
+.trow{display:grid;grid-template-columns:2fr 2fr 1.4fr 1fr;gap:8px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:7px;align-items:center;font-size:13px}
+.t-brand{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-email{color:var(--text3);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-status select{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:4px 6px;border-radius:8px;font-size:11px;font-family:inherit;width:100%}
+.t-cat{color:var(--text2);font-size:11px}
+/* ANALYTICS */
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px}
+.bar-label{min-width:90px;color:var(--text2)}
+.bar-track{flex:1;background:var(--bg2);border-radius:20px;height:10px;overflow:hidden}
+.bar-fill{height:100%;border-radius:20px;background:var(--mint)}
+.bar-pct{min-width:36px;text-align:right;font-weight:600;color:var(--mint-d);font-size:12px}
+.act-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bg3);font-size:13px}
+.act-row:last-child{border-bottom:none}
+.act-dot{width:8px;height:8px;border-radius:50%;background:var(--mint);flex-shrink:0;margin-top:5px}
+.act-text{color:var(--text);flex:1}
+.act-time{color:var(--text3);font-size:11px}
+/* TOOLS */
+.price-display{background:var(--mint-bg);border:2px solid var(--mint-l);border-radius:16px;padding:28px;text-align:center;margin-bottom:20px}
+.price-amount{font-size:52px;font-weight:800;color:var(--mint-d)}
+.price-lbl{font-size:13px;color:var(--mint);margin-top:4px}
+.slider-wrap{margin-bottom:16px}
+.slider-label{display:flex;justify-content:space-between;font-size:12px;color:var(--text2);margin-bottom:6px}
+input[type=range]{width:100%;accent-color:var(--mint)}
+.kit-preview{background:var(--text);color:#fff;border-radius:16px;padding:32px;margin-top:16px}
+.kit-preview h2{font-size:28px;font-weight:800;margin-bottom:4px}
+.kit-preview h2 span{color:var(--mint-l)}
+.kit-sub{font-size:13px;color:#aaa;margin-bottom:24px}
+.kit-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.kit-stat{background:#ffffff14;border-radius:10px;padding:14px 10px;text-align:center}
+.kit-stat-num{font-size:20px;font-weight:700}
+.kit-stat-lbl{font-size:9px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.contract-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;cursor:pointer;transition:all 0.15s}
+.contract-card:hover{border-color:var(--mint)}
+.contract-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.contract-desc{font-size:12px;color:var(--text2)}
+.contract-full{display:none;background:var(--bg);border-radius:10px;padding:20px;margin-top:14px;font-size:13px;line-height:1.8;color:var(--text);white-space:pre-line}
+.contract-full.on{display:block}
+/* PRICING PAGE */
+.pricing-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+.tier-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column}
+.tier-card.featured{border:2px solid var(--mint)}
+.tier-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.tier-name{font-size:17px;font-weight:600;margin-bottom:4px}
+.tier-tagline{font-size:11px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.tier-price{font-size:32px;font-weight:700;color:var(--text)}
+.tier-price.mint{color:var(--mint-d)}
+.tier-price sup{font-size:15px;vertical-align:top;margin-top:6px;display:inline-block}
+.tier-billed{font-size:11px;color:var(--text3);margin-bottom:16px}
+.pop-badge{background:var(--mint);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.feat-group{margin-bottom:12px}
+.fg-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--text3);margin-bottom:6px}
+.fi{display:flex;gap:7px;align-items:flex-start;padding:4px 0;font-size:12px;line-height:1.5}
+.fi.yes{color:var(--text)}
+.fi.yes .fi-icon{color:var(--mint);font-weight:700}
+.fi.no{color:var(--text3)}
+.fi.no .fi-icon{color:var(--text3)}
+.fi-icon{font-size:13px;flex-shrink:0;margin-top:1px;font-weight:700}
+/* COMPARE TABLE */
+.compare-table{width:100%;border-collapse:collapse;font-size:13px}
+.compare-table th{background:var(--bg2);padding:10px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text2);border-bottom:1px solid var(--border)}
+.compare-table th:first-child{text-align:left}
+.compare-table th:not(:first-child){text-align:center}
+.compare-table td{padding:10px 12px;border-bottom:1px solid var(--bg3)}
+.compare-table td:first-child{font-weight:500;color:var(--text)}
+.compare-table td:not(:first-child){text-align:center;font-size:15px;font-weight:600}
+.compare-table tr:nth-child(even) td{background:var(--bg)}
+.cv-check{color:var(--mint)}
+.cv-x{color:var(--text3)}
+.cv-val{color:var(--text);font-size:12px;font-weight:500}
+@media(max-width:640px){
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .brand-grid{grid-template-columns:repeat(2,1fr)}
+  .pipeline{grid-template-columns:repeat(3,1fr)}
+  .thead,.trow{grid-template-columns:1.5fr 1.5fr 1.2fr}
+  .thead span:last-child,.trow .t-cat{display:none}
+  .nav-tab{padding:6px 9px;font-size:11px}
+  .pricing-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div>
+    <div class="logo"><span>col</span>ura</div>
+    <div class="logo-sub">creator outreach</div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab on" onclick="go('home',this)">Home</button>
+    <button class="nav-tab" onclick="go('brands',this)">Brands</button>
+    <button class="nav-tab" onclick="go('pitch',this)">Pitch</button>
+    <button class="nav-tab" onclick="go('tracker',this)">Tracker</button>
+    <button class="nav-tab" onclick="go('analytics',this)">Analytics</button>
+    <button class="nav-tab" onclick="go('tools',this)">Tools</button>
+    <button class="nav-tab" onclick="go('pricing',this)">Pricing</button>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="pg-home" class="page on">
+  <div class="page-title">Welcome back, Tamara 👋</div>
+  <div class="page-sub">Here's your outreach overview</div>
+  <div class="g4">
+    <div class="stat-card"><div class="stat-num">12</div><div class="stat-lbl">Emails Sent</div><div class="stat-trend">↑ 4 this week</div></div>
+    <div class="stat-card"><div class="stat-num">34%</div><div class="stat-lbl">Open Rate</div><div class="stat-trend">↑ Above avg</div></div>
+    <div class="stat-card"><div class="stat-num">8%</div><div class="stat-lbl">Reply Rate</div><div class="stat-trend">↑ Growing</div></div>
+    <div class="stat-card"><div class="stat-num">2</div><div class="stat-lbl">Deals Closed</div><div class="stat-trend">🎉 Keep going!</div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Deal Pipeline</div>
+    <div class="pipeline">
+      <div class="pipe-step"><div class="pipe-num">25</div><div class="pipe-lbl">Identified</div></div>
+      <div class="pipe-step"><div class="pipe-num">12</div><div class="pipe-lbl">Contacted</div></div>
+      <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-lbl">Replied</div></div>
+      <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-lbl">Negotiating</div></div>
+      <div class="pipe-step"><div class="pipe-num" style="color:var(--nude-d)">2</div><div class="pipe-lbl">Closed 🎉</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Follow-Up Reminders</div>
+    <div class="rem-row"><div><div class="rem-brand">Rare Beauty</div><div style="font-size:11px;color:var(--text3)">hello@rarebeauty.com</div></div><span class="days d-urgent">Follow up TODAY</span></div>
+    <div class="rem-row"><div><div class="rem-brand">Espive Hair</div><div style="font-size:11px;color:var(--text3)">espivehair@gmail.com</div></div><span class="days d-ok">Follow up in 2 days</span></div>
+    <div class="rem-row"><div><div class="rem-brand">Glow Recipe</div><div style="font-size:11px;color:var(--text3)">love@hellobubble.com</div></div><span class="days d-good">Follow up in 5 days</span></div>
+    <div class="rem-row"><div><div class="rem-brand">NARS Cosmetics</div><div style="font-size:11px;color:var(--text3)">pr@narscosmetics.com</div></div><span class="days d-good">Follow up in 7 days</span></div>
+  </div>
+</div>
+
+<!-- BRANDS -->
+<div id="pg-brands" class="page">
+  <div class="page-title">Brand Directory</div>
+  <div class="page-sub">25 brands with verified contacts — tap to select for pitching</div>
+  <input class="search-bar" type="text" placeholder="Search brands..." oninput="filterBrands(this.value)" id="brand-search">
+  <div class="pill-row" id="niche-filters">
+    <button class="pill on" onclick="filterNiche('All',this)">All</button>
+    <button class="pill" onclick="filterNiche('Hair',this)">Hair / Wigs</button>
+    <button class="pill" onclick="filterNiche('Beauty',this)">Beauty</button>
+    <button class="pill" onclick="filterNiche('Makeup',this)">Makeup</button>
+    <button class="pill" onclick="filterNiche('Skincare',this)">Skincare</button>
+    <button class="pill" onclick="filterNiche('Lifestyle',this)">Lifestyle</button>
+  </div>
+  <div class="brand-grid" id="brand-grid"></div>
+  <div class="btn-row" style="margin-top:16px">
+    <button class="btn btn-mint" onclick="pitchSelected()">Pitch Selected Brand →</button>
+  </div>
+</div>
+
+<!-- PITCH -->
+<div id="pg-pitch" class="page">
+  <div class="page-title">Email Composer</div>
+  <div class="page-sub">Fill in the details and build your personalized pitch</div>
+  <div class="card">
+    <div class="ctitle">Brand Info</div>
+    <div class="g2">
+      <div class="field"><label>Brand Name *</label><input type="text" id="bname" placeholder="e.g. Rare Beauty"></div>
+      <div class="field"><label>Their Email *</label><input type="email" id="bemail" placeholder="e.g. pr@rarebeauty.com"></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Brand Type</label>
+        <select id="btype">
+          <option value="wig">Wig / Hair</option>
+          <option value="beauty">Beauty / Skincare</option>
+          <option value="makeup">Makeup / Cosmetics</option>
+          <option value="fashion">Fashion</option>
+          <option value="lifestyle">Lifestyle / Wellness</option>
+        </select>
+      </div>
+      <div class="field"><label>Something you like about them</label><input type="text" id="bdetail" placeholder="e.g. love their watermelon serum"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">What Are You Asking For?</div>
+    <div class="pill-row" id="goal-pills">
+      <button class="pill on" onclick="setGoal('free',this)">Free PR / Gifted</button>
+      <button class="pill" onclick="setGoal('commission',this)">Commission</button>
+      <button class="pill" onclick="setGoal('paid',this)">Paid Collab</button>
+      <button class="pill" onclick="setGoal('any',this)">Open to Anything</button>
+    </div>
+    <div class="divider"></div>
+    <div class="ctitle">Tone</div>
+    <div class="pill-row" id="tone-pills">
+      <button class="pill on" onclick="setTone('warm',this)">Warm & Friendly</button>
+      <button class="pill" onclick="setTone('professional',this)">Professional</button>
+      <button class="pill" onclick="setTone('bold',this)">Bold & Confident</button>
+      <button class="pill" onclick="setTone('casual',this)">Casual</button>
+    </div>
+    <button class="btn btn-nude btn-full" onclick="buildEmail()">Build My Pitch Email</button>
+  </div>
+  <div class="email-preview" id="email-preview">
+    <div class="card">
+      <div class="ctitle">Your Email — Tap to Edit</div>
+      <div class="email-meta">
+        <div class="email-meta-row">To: <span id="prev-to">—</span></div>
+        <div class="email-meta-row">Subject: <span id="prev-subj">—</span></div>
+      </div>
+      <div class="email-body-edit" id="prev-body" contenteditable="true" spellcheck="true"></div>
+      <div class="tip">Add 2–3 links to your best TikTok or Instagram videos at the bottom before sending.</div>
+      <div class="btn-row">
+        <button class="btn btn-mint" onclick="openGmail()">Open in Gmail</button>
+        <button class="btn btn-outline" onclick="copyEmail()">Copy Email</button>
+        <button class="btn btn-outline" onclick="addToTracker()">Add to Tracker</button>
+        <button class="btn btn-outline" onclick="buildEmail()">Rebuild</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="pg-tracker" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div class="page-title">Outreach Tracker</div><div class="page-sub" style="margin:0">Log every brand you contact</div></div>
+    <button class="btn btn-outline" onclick="toggleAdd()">+ Add Brand</button>
+  </div>
+  <div class="card" id="add-form" style="display:none;margin-bottom:16px">
+    <div class="ctitle">Add New Brand</div>
+    <div class="g2">
+      <div class="field"><label>Brand Name</label><input type="text" id="new-brand" placeholder="Brand name"></div>
+      <div class="field"><label>Email</label><input type="text" id="new-email" placeholder="their@email.com"></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Category</label>
+        <select id="new-cat"><option>Wig / Hair</option><option>Beauty</option><option>Makeup</option><option>Skincare</option><option>Fashion</option><option>Lifestyle</option></select>
+      </div>
+      <div class="field"><label>Status</label>
+        <select id="new-status"><option>Not contacted</option><option>Email sent</option><option>Replied</option><option>No response</option><option>Deal closed!</option></select>
+      </div>
+    </div>
+    <button class="btn btn-mint btn-full" onclick="addEntry()" style="margin-top:8px">Save Brand</button>
+  </div>
+  <div class="pill-row" id="t-filters">
+    <button class="pill on" onclick="setTFilter('All',this)">All</button>
+    <button class="pill" onclick="setTFilter('Not contacted',this)">Not contacted</button>
+    <button class="pill" onclick="setTFilter('Email sent',this)">Sent</button>
+    <button class="pill" onclick="setTFilter('Replied',this)">Replied</button>
+    <button class="pill" onclick="setTFilter('No response',this)">No response</button>
+    <button class="pill" onclick="setTFilter('Deal closed!',this)">Closed 🎉</button>
+  </div>
+  <div class="thead"><span>Brand</span><span>Email</span><span>Status</span><span>Category</span></div>
+  <div id="tracker-list"></div>
+</div>
+
+<!-- ANALYTICS -->
+<div id="pg-analytics" class="page">
+  <div class="page-title">Analytics</div>
+  <div class="page-sub">Track your outreach performance</div>
+  <div class="g4">
+    <div class="stat-card"><div class="stat-num">34%</div><div class="stat-lbl">Open Rate</div></div>
+    <div class="stat-card"><div class="stat-num">8%</div><div class="stat-lbl">Reply Rate</div></div>
+    <div class="stat-card"><div class="stat-num">4.2d</div><div class="stat-lbl">Avg Response</div></div>
+    <div class="stat-card"><div class="stat-num">Tue</div><div class="stat-lbl">Best Send Day</div></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Open Rate by Niche</div>
+    <div class="bar-row"><span class="bar-label">Hair / Wigs</span><div class="bar-track"><div class="bar-fill" style="width:42%"></div></div><span class="bar-pct">42%</span></div>
+    <div class="bar-row"><span class="bar-label">Beauty</span><div class="bar-track"><div class="bar-fill" style="width:38%"></div></div><span class="bar-pct">38%</span></div>
+    <div class="bar-row"><span class="bar-label">Makeup</span><div class="bar-track"><div class="bar-fill" style="width:31%"></div></div><span class="bar-pct">31%</span></div>
+    <div class="bar-row"><span class="bar-label">Skincare</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="bar-pct">28%</span></div>
+    <div class="bar-row"><span class="bar-label">Lifestyle</span><div class="bar-track"><div class="bar-fill" style="width:22%"></div></div><span class="bar-pct">22%</span></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Recent Activity</div>
+    <div class="act-row"><div class="act-dot"></div><div class="act-text">Sent pitch to <strong>Rare Beauty</strong></div><span class="act-time">Today</span></div>
+    <div class="act-row"><div class="act-dot"></div><div class="act-text"><strong>Espive Hair</strong> opened your email</div><span class="act-time">Yesterday</span></div>
+    <div class="act-row"><div class="act-dot" style="background:var(--nude)"></div><div class="act-text"><strong>Charmanty</strong> replied to your pitch!</div><span class="act-time">2 days ago</span></div>
+    <div class="act-row"><div class="act-dot"></div><div class="act-text">Sent pitch to <strong>NARS Cosmetics</strong></div><span class="act-time">3 days ago</span></div>
+    <div class="act-row"><div class="act-dot" style="background:var(--nude)"></div><div class="act-text">Deal closed with <strong>Lady Gray Wigs</strong> 🎉</div><span class="act-time">5 days ago</span></div>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<div id="pg-tools" class="page">
+  <div class="page-title">Creator Tools</div>
+  <div class="page-sub">Everything you need to run your creator business</div>
+  <div class="card">
+    <div class="ctitle">Media Kit Builder</div>
+    <div class="g2">
+      <div class="field"><label>Your Name</label><input type="text" id="kit-name" value="Tamara Lincoln"></div>
+      <div class="field"><label>Handle</label><input type="text" id="kit-handle" value="@__deinfluencer_"></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Niche</label><input type="text" id="kit-niche" value="Lifestyle · Hair · Beauty"></div>
+      <div class="field"><label>Location</label><input type="text" id="kit-location" value="Michigan, USA"></div>
+    </div>
+    <button class="btn btn-mint" onclick="buildKit()">Generate Media Kit</button>
+    <div id="kit-preview" style="display:none;margin-top:16px">
+      <div class="kit-preview">
+        <h2 id="kit-pname">Tamara <span>Lincoln</span></h2>
+        <div class="kit-sub" id="kit-psub">@__deinfluencer_ · Lifestyle · Hair · Beauty · Michigan, USA</div>
+        <div class="kit-stats">
+          <div class="kit-stat"><div class="kit-stat-num">1,116</div><div class="kit-stat-lbl">TikTok</div></div>
+          <div class="kit-stat"><div class="kit-stat-num">3,513</div><div class="kit-stat-lbl">Instagram</div></div>
+          <div class="kit-stat"><div class="kit-stat-num">2,400</div><div class="kit-stat-lbl">Facebook</div></div>
+          <div class="kit-stat"><div class="kit-stat-num">829</div><div class="kit-stat-lbl">YouTube</div></div>
+        </div>
+        <div style="font-size:13px;color:#aaa;margin-bottom:8px">190K TikTok views · 58K Instagram views (60 days) · 21.5K Facebook views</div>
+        <div style="font-size:13px;color:var(--mint-l)">tamara.lincoln.ugc@gmail.com</div>
+      </div>
+      <div class="btn-row"><button class="btn btn-outline" onclick="copyKit()">Copy Media Kit Text</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Pricing Calculator</div>
+    <div class="price-display">
+      <div class="price-amount" id="price-out">$150</div>
+      <div class="price-lbl">Suggested rate for this package</div>
+    </div>
+    <div class="field" style="margin-bottom:14px">
+      <label>Content Type</label>
+      <select id="p-type" onchange="calcPrice()">
+        <option value="60">TikTok video (60s)</option>
+        <option value="80">Instagram Reel</option>
+        <option value="50">YouTube Short</option>
+        <option value="120">Full YouTube video</option>
+        <option value="30">Photo / static post</option>
+        <option value="200">Full package (TikTok + Reel + Review)</option>
+      </select>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label"><span>Followers</span><span id="followers-val">3,000</span></div>
+      <input type="range" min="500" max="50000" step="500" value="3000" id="p-followers" oninput="calcPrice()">
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label"><span>Revisions included</span><span id="revisions-val">1</span></div>
+      <input type="range" min="0" max="3" step="1" value="1" id="p-revisions" oninput="calcPrice()">
+    </div>
+    <div class="field">
+      <label>Usage Rights</label>
+      <select id="p-usage" onchange="calcPrice()">
+        <option value="1">Creator posts only</option>
+        <option value="1.5">Brand can repost</option>
+        <option value="2">Full commercial rights</option>
+      </select>
+    </div>
+    <div class="tip">For gifted/PR collabs, make sure the product value is at least equal to this rate!</div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Contract Templates</div>
+    <div id="contracts"></div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div id="pg-pricing" class="page">
+  <div class="page-title">Pricing</div>
+  <div class="page-sub">Simple plans · Cancel anytime · Monthly, semi-annual, or annual billing</div>
+  <div class="pill-row" id="bill-pills" style="margin-bottom:24px">
+    <button class="pill on" onclick="setBill('monthly',this)">Monthly</button>
+    <button class="pill" onclick="setBill('semi',this)">Semi-annual <span style="font-size:10px;background:#eaf2ec;color:#3a6a4a;padding:2px 7px;border-radius:20px;margin-left:4px;font-weight:600">Save 15%</span></button>
+    <button class="pill" onclick="setBill('annual',this)">Annual <span style="font-size:10px;background:#eaf2ec;color:#3a6a4a;padding:2px 7px;border-radius:20px;margin-left:4px;font-weight:600">Save 25%</span></button>
+  </div>
+  <div class="pricing-grid" id="pricing-grid"></div>
+  <div class="card">
+    <div class="ctitle">Full Feature Comparison</div>
+    <div style="overflow-x:auto">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Feature</th>
+            <th>Free</th>
+            <th style="color:var(--nude-d)">Starter</th>
+            <th style="color:var(--mint-d)">Pro</th>
+            <th>Elite</th>
+          </tr>
+        </thead>
+        <tbody id="compare-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--text3);font-style:italic;margin-top:8px">Semi-annual saves 15% · Annual saves 25% vs monthly billing</p>
+</div>
+
+<script>
+// NAV
+function go(id, el) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nav-tab').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('pg-' + id).classList.add('on');
+  el.classList.add('on');
+}
+
+// BRANDS
+var BRANDS = [
+  {name:'Espive Hair',niche:'Hair',email:'espivehair@gmail.com'},
+  {name:'Lady Gray Wigs',niche:'Hair',email:'pr@ladygrayy.com'},
+  {name:'Charmanty',niche:'Hair',email:'charmantyofficial@gmail.com'},
+  {name:'Curl Queen',niche:'Hair',email:'curlsqueenin@gmail.com'},
+  {name:'Anyweekhair',niche:'Hair',email:'tiktok.anyweekhair@gmail.com'},
+  {name:'Wavytalk',niche:'Hair',email:'jerry@wavytalk.shop'},
+  {name:'Jennywig',niche:'Hair',email:'jennywigs8@outlook.com'},
+  {name:'Hairlovely',niche:'Hair',email:'hairlovelycollab@gmail.com'},
+  {name:'Rare Beauty',niche:'Beauty',email:'hello@rarebeauty.com'},
+  {name:'Saie Cosmetics',niche:'Beauty',email:'community@saiehello.com'},
+  {name:'YSL Beauty',niche:'Beauty',email:'press@yslbeauty.com'},
+  {name:'Glossier',niche:'Beauty',email:'press@glossier.com'},
+  {name:'Glow Recipe',niche:'Skincare',email:'love@hellobubble.com'},
+  {name:'Bubble Cosmetics',niche:'Skincare',email:'love@hellobubble.com'},
+  {name:'Rhode Skin',niche:'Skincare',email:'hello@rhodeskin.com'},
+  {name:'NARS Cosmetics',niche:'Makeup',email:'pr@narscosmetics.com'},
+  {name:'Elf Cosmetics',niche:'Makeup',email:'elfpartners@elfcosmetics.com'},
+  {name:'Fenty Beauty',niche:'Makeup',email:'pr@fentybeauty.com'},
+  {name:'Alo Yoga',niche:'Lifestyle',email:'pr@aloyoga.com'},
+  {name:'Skims',niche:'Lifestyle',email:'press@skims.com'},
+  {name:'Artizia',niche:'Lifestyle',email:'press@artizia.com'},
+  {name:'Caraway',niche:'Lifestyle',email:'press@carawayhome.com'},
+  {name:'Olipop',niche:'Lifestyle',email:'hello@drinkolipop.com'},
+  {name:'Shein',niche:'Lifestyle',email:'productreviewtesting.com'},
+  {name:'Amazon',niche:'Lifestyle',email:'packagereviewers.com'},
+];
+var activeNiche = 'All', selectedBrand = null;
+
+function renderBrands(list) {
+  document.getElementById('brand-grid').innerHTML = list.map(function(b) {
+    return '<div class="brand-card' + (selectedBrand===b.name?' selected':'') + '" onclick="selectBrand(\'' + b.name.replace(/'/g,"\\'") + '\',\'' + b.email + '\',this)">' +
+      '<div class="brand-name">' + b.name + '</div>' +
+      '<div class="brand-niche">' + b.niche + '</div>' +
+      '<div class="brand-email">' + b.email + '</div></div>';
+  }).join('');
+}
+
+function filterBrands(q) {
+  var filtered = BRANDS.filter(function(b){ return (activeNiche==='All'||b.niche===activeNiche) && b.name.toLowerCase().includes(q.toLowerCase()); });
+  renderBrands(filtered);
+}
+
+function filterNiche(n, el) {
+  activeNiche = n;
+  document.querySelectorAll('#niche-filters .pill').forEach(function(p){ p.classList.remove('on'); });
+  el.classList.add('on');
+  filterBrands(document.getElementById('brand-search').value);
+}
+
+function selectBrand(name, email, el) {
+  document.querySelectorAll('.brand-card').forEach(function(c){ c.classList.remove('selected'); });
+  el.classList.add('selected');
+  selectedBrand = name;
+  document.getElementById('bname').value = name;
+  document.getElementById('bemail').value = email;
+}
+
+function pitchSelected() {
+  if (!selectedBrand) { alert('Tap a brand first!'); return; }
+  go('pitch', document.querySelectorAll('.nav-tab')[2]);
+}
+
+renderBrands(BRANDS);
+
+// EMAIL
+var goal = 'free', tone = 'warm';
+function setGoal(g,el){ goal=g; document.querySelectorAll('#goal-pills .pill').forEach(function(p){p.classList.remove('on');}); el.classList.add('on'); }
+function setTone(t,el){ tone=t; document.querySelectorAll('#tone-pills .pill').forEach(function(p){p.classList.remove('on');}); el.classList.add('on'); }
+
+function buildEmail() {
+  var name = document.getElementById('bname').value.trim();
+  var email = document.getElementById('bemail').value.trim();
+  var type = document.getElementById('btype').value;
+  var detail = document.getElementById('bdetail').value.trim();
+  if (!name) { document.getElementById('bname').focus(); return; }
+  var niche = type==='wig'?'hair and lifestyle':'beauty and lifestyle';
+  var product = type==='wig'?'wigs':'products';
+  var greets = {warm:'Hi '+name+' Team,',professional:'Hello '+name+' Team,',bold:'Hey '+name+'!',casual:'Hey! 👋'};
+  var intros = {
+    warm:'My name is Tamara Lincoln and I genuinely love what '+name+' is doing'+(detail?' — especially '+detail:'')+'. I create '+niche+' content as @__deinfluencer_ across TikTok, Instagram, Facebook, and YouTube.',
+    professional:'My name is Tamara Lincoln, a '+niche+' creator based in Michigan (@__deinfluencer_). I am writing to explore a collaboration with '+name+(detail?', whose '+detail+' I particularly admire':'')+'. ',
+    bold:"I'm Tamara Lincoln — @__deinfluencer_ — and I want to partner with "+name+(detail?'. I love '+detail:'')+'. I know I can bring real value to your brand.',
+    casual:"I'm Tamara (@__deinfluencer_) and I've been obsessed with "+name+(detail?' — especially '+detail:'')+'. I would love to collab!'
+  };
+  var goals = {
+    free:'I would love to create content featuring your '+product+' in exchange for a gifted item — completely free of charge to you.',
+    commission:'I would love to set up a commission or affiliate deal where I promote your '+product+' and earn based on sales I drive.',
+    paid:"I'm interested in a paid collaboration to create dedicated content featuring your "+product+'.',
+    any:"I'm open to gifted PR, commission, or a paid partnership — whatever works best for you!"
+  };
+  var stats = 'About my reach:\n• TikTok: 1,116 followers · 190K+ views this past year · 91.9% search discovery\n• Instagram: 3,513 followers · 58K+ views in 60 days · +22% accounts reached\n• Facebook: 2,400 followers · 21.5K views last month\n• YouTube: 829 subscribers and growing';
+  var offer = 'What I will deliver:\n• 2 TikTok videos (unboxing, styling, honest review)\n• 1 Instagram Reel cross-posted to Facebook\n• YouTube unboxing and review\n• 5-star review on your platform\n• Your link in my bio for 30 days';
+  var closes = {
+    warm:"I've included content examples so you can see my style. Just reply and we can get started!",
+    professional:'Please find examples of my content below. I look forward to potentially working together.',
+    bold:'My content examples are below — you will see why this makes sense. Looking forward to it!',
+    casual:"Check out my videos below so you can see my vibe. Lmk if you're interested!"
+  };
+  var sig = 'Warmly,\nTamara Lincoln\n@__deinfluencer_ · TikTok & Instagram\n@De_Influencerr · YouTube\ntamara.lincoln.ugc@gmail.com';
+  var subjs = {wig:'Collab Inquiry — Tamara Lincoln x '+name,beauty:'UGC Creator Collab — Tamara Lincoln (@__deinfluencer_)',makeup:'Creator Collab — @__deinfluencer_',fashion:'Creator Collab — Tamara Lincoln x '+name,lifestyle:'Collab Inquiry — Tamara Lincoln x '+name};
+  var body = greets[tone]+'\n\n'+intros[tone]+'\n\n'+stats+'\n\n'+goals[goal]+'\n\n'+offer+'\n\n'+closes[tone]+'\n\n'+sig;
+  document.getElementById('prev-to').textContent = email||'[paste email here]';
+  document.getElementById('prev-subj').textContent = subjs[type];
+  document.getElementById('prev-body').innerText = body;
+  document.getElementById('email-preview').classList.add('on');
+  setTimeout(function(){ document.getElementById('email-preview').scrollIntoView({behavior:'smooth'}); },100);
+}
+
+function openGmail() {
+  var to = document.getElementById('bemail').value.trim();
+  var s = encodeURIComponent(document.getElementById('prev-subj').textContent);
+  var b = encodeURIComponent(document.getElementById('prev-body').innerText);
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to)+'&su='+s+'&body='+b,'_blank');
+}
+function copyEmail() {
+  navigator.clipboard.writeText('To: '+document.getElementById('prev-to').textContent+'\nSubject: '+document.getElementById('prev-subj').textContent+'\n\n'+document.getElementById('prev-body').innerText).catch(function(){});
+  alert('Copied!');
+}
+
+// TRACKER
+var entries = [
+  {brand:'Espive Hair',email:'espivehair@gmail.com',status:'Not contacted',cat:'Hair'},
+  {brand:'Rare Beauty',email:'hello@rarebeauty.com',status:'Email sent',cat:'Beauty'},
+  {brand:'Lady Gray Wigs',email:'pr@ladygrayy.com',status:'Not contacted',cat:'Hair'},
+  {brand:'Glow Recipe',email:'love@hellobubble.com',status:'Not contacted',cat:'Skincare'},
+  {brand:'NARS Cosmetics',email:'pr@narscosmetics.com',status:'Email sent',cat:'Makeup'},
+  {brand:'Charmanty',email:'charmantyofficial@gmail.com',status:'Replied',cat:'Hair'},
+  {brand:'Rhode Skin',email:'hello@rhodeskin.com',status:'Not contacted',cat:'Skincare'},
+  {brand:'YSL Beauty',email:'press@yslbeauty.com',status:'Not contacted',cat:'Beauty'},
+];
+var tFilter = 'All';
+
+function addToTracker() {
+  var n=document.getElementById('bname').value.trim();
+  var e=document.getElementById('bemail').value.trim();
+  var t=document.getElementById('btype').options[document.getElementById('btype').selectedIndex].text;
+  if(!n) return;
+  entries.unshift({brand:n,email:e,status:'Email sent',cat:t});
+  alert(n+' added to tracker!');
+  renderTracker();
+}
+function toggleAdd(){ var f=document.getElementById('add-form'); f.style.display=f.style.display==='none'?'block':'none'; }
+function addEntry(){
+  var b=document.getElementById('new-brand').value.trim(); if(!b) return;
+  entries.unshift({brand:b,email:document.getElementById('new-email').value.trim(),status:document.getElementById('new-status').value,cat:document.getElementById('new-cat').value});
+  document.getElementById('new-brand').value=''; document.getElementById('new-email').value='';
+  document.getElementById('add-form').style.display='none'; renderTracker();
+}
+function setTFilter(f,el){ tFilter=f; document.querySelectorAll('#t-filters .pill').forEach(function(p){p.classList.remove('on');}); el.classList.add('on'); renderTracker(); }
+function changeStatus(i,v){ entries[i].status=v; }
+function renderTracker(){
+  var shown=tFilter==='All'?entries:entries.filter(function(e){return e.status===tFilter;});
+  document.getElementById('tracker-list').innerHTML=shown.length?shown.map(function(e){
+    var ri=entries.indexOf(e);
+    return '<div class="trow"><span class="t-brand">'+e.brand+'</span><span class="t-email">'+(e.email||'—')+'</span><span class="t-status"><select onchange="changeStatus('+ri+',this.value)"><option'+(e.status==='Not contacted'?' selected':'')+'>Not contacted</option><option'+(e.status==='Email sent'?' selected':'')+'>Email sent</option><option'+(e.status==='Replied'?' selected':'')+'>Replied</option><option'+(e.status==='No response'?' selected':'')+'>No response</option><option'+(e.status==='Deal closed!'?' selected':'')+'>Deal closed!</option></select></span><span class="t-cat">'+e.cat+'</span></div>';
+  }).join(''):'<div style="text-align:center;color:var(--text3);padding:30px;font-size:14px">No entries yet</div>';
+}
+renderTracker();
+
+// PRICING CALCULATOR
+function calcPrice(){
+  var base=parseInt(document.getElementById('p-type').value);
+  var f=parseInt(document.getElementById('p-followers').value);
+  var r=parseInt(document.getElementById('p-revisions').value);
+  var u=parseFloat(document.getElementById('p-usage').value);
+  var fm=f<1000?0.8:f<5000?1:f<10000?1.3:f<25000?1.6:2;
+  document.getElementById('price-out').textContent='$'+Math.round((base*fm*u)+(r*15));
+  document.getElementById('followers-val').textContent=f.toLocaleString();
+  document.getElementById('revisions-val').textContent=r;
+}
+calcPrice();
+
+// MEDIA KIT
+function buildKit(){
+  var name=document.getElementById('kit-name').value;
+  var handle=document.getElementById('kit-handle').value;
+  var niche=document.getElementById('kit-niche').value;
+  var loc=document.getElementById('kit-location').value;
+  var parts=name.split(' ');
+  document.getElementById('kit-pname').innerHTML=parts.slice(0,-1).join(' ')+' <span>'+parts[parts.length-1]+'</span>';
+  document.getElementById('kit-psub').textContent=handle+' · '+niche+' · '+loc;
+  document.getElementById('kit-preview').style.display='block';
+}
+function copyKit(){
+  var text='TAMARA LINCOLN — CREATOR MEDIA KIT\n@__deinfluencer_ · TikTok & Instagram · @De_Influencerr · YouTube\n\nSTATS:\n• TikTok: 1,116 followers · 190K views/year\n• Instagram: 3,513 followers · 58K views/60 days\n• Facebook: 2,400 followers\n• YouTube: 829 subscribers\n\nOFFERINGS: 2 TikTok videos · 1 Instagram Reel · YouTube review · 5-star review · 30-day bio link\nPARTNERSHIPS: Gifted PR · Commission · Paid Collaborations\nCONTACT: tamara.lincoln.ugc@gmail.com';
+  navigator.clipboard.writeText(text).catch(function(){});
+  alert('Media kit copied!');
+}
+
+// CONTRACTS
+var CONTRACTS=[
+  {name:'Gifted Product Agreement',desc:'For free PR / gifted collabs with no cash exchanged',
+   text:'GIFTED PRODUCT COLLABORATION AGREEMENT\n\nCreator: Tamara Lincoln (@__deinfluencer_)\nBrand: [Brand Name]\nDate: [Date]\n\nThe brand agrees to provide [product/value] in exchange for:\n• 2 TikTok videos within 14 days of receiving product\n• 1 Instagram Reel within 14 days\n• Honest review posted on brand platform\n• Brand bio link for 30 days\n\nContent remains on creator\'s platforms for minimum 90 days.\nCreator retains creative control while following brand guidelines.\n\nSigned: _________________ (Creator)\nSigned: _________________ (Brand)'},
+  {name:'Paid Collaboration Agreement',desc:'For paid brand deals — protects your rate and timeline',
+   text:'PAID COLLABORATION AGREEMENT\n\nCreator: Tamara Lincoln (@__deinfluencer_)\nBrand: [Brand Name]\nDate: [Date]\nFee: $[Amount] USD\nPayment due: [Date]\n\nDeliverables:\n• [List content pieces]\n• Posted within [X] days of approval\n• [X] rounds of revision included\n\nUsage rights: [Creator only / Brand repost / Commercial]\nPayment method: [PayPal / Venmo / Wire]\n\nSigned: _________________ (Creator)\nSigned: _________________ (Brand)'},
+  {name:'Commission / Affiliate Agreement',desc:'For deals where you earn % of sales you drive',
+   text:'AFFILIATE PARTNERSHIP AGREEMENT\n\nCreator: Tamara Lincoln (@__deinfluencer_)\nBrand: [Brand Name]\nDate: [Date]\nCommission rate: [X]% per sale\n\nCreator will:\n• Create [X] pieces of content per month\n• Include unique tracking link/code in all posts\n• Disclose partnership per FTC guidelines\n\nBrand will:\n• Provide unique discount code: [CODE]\n• Pay commission monthly via [method]\n• Provide performance dashboard access\n\nSigned: _________________ (Creator)\nSigned: _________________ (Brand)'},
+  {name:'UGC Content License',desc:'For when a brand wants to reuse your content on their channels',
+   text:'UGC CONTENT LICENSE AGREEMENT\n\nCreator: Tamara Lincoln\nBrand: [Brand Name]\nDate: [Date]\nLicense fee: $[Amount]\n\nCreator grants brand a [exclusive/non-exclusive] license to use [content description] across:\n• Brand social media channels\n• Website and digital ads\n• Duration: [X] months\n\nCreator retains copyright. Brand may not alter content without written approval.\n\nSigned: _________________ (Creator)\nSigned: _________________ (Brand)'},
+];
+document.getElementById('contracts').innerHTML=CONTRACTS.map(function(c,i){
+  return '<div class="contract-card" onclick="toggleContract('+i+')">' +
+    '<div class="contract-name">'+c.name+'</div>' +
+    '<div class="contract-desc">'+c.desc+'</div>' +
+    '<div class="contract-full" id="contract-'+i+'">'+c.text+
+    '<div style="margin-top:14px"><button class="btn btn-outline" onclick="event.stopPropagation();copyContract('+i+')">Copy Template</button></div></div></div>';
+}).join('');
+function toggleContract(i){ document.getElementById('contract-'+i).classList.toggle('on'); }
+function copyContract(i){ navigator.clipboard.writeText(CONTRACTS[i].text).catch(function(){}); alert('Contract copied!'); }
+
+// PRICING TIERS
+var PRICES={
+  monthly:{starter:9,pro:19,elite:29,label:'Billed monthly'},
+  semi:{starter:7.65,pro:16.15,elite:24.65,label:'Billed every 6 months'},
+  annual:{starter:6.75,pro:14.25,elite:21.75,label:'Billed annually'},
+};
+var currentBill='monthly';
+
+function fmtPrice(v){ return '$'+(v%1===0?v:v.toFixed(2)); }
+
+function renderPricing(){
+  var p=PRICES[currentBill];
+  var tiers=[
+    {tag:'Free forever',tagColor:'var(--text2)',name:'Free',tagline:'Get organized, explore, start tracking',price:'$0',billed:'No credit card needed',featured:false,btnClass:'btn-outline',btnText:'Start free',
+     groups:[
+       {label:'Brands',items:[{yes:true,text:'Browse 10 brands'},{yes:'partial',text:'Send 3 pitches/month'},{yes:false,text:'Full brand directory'}]},
+       {label:'Organization',items:[{yes:true,text:'Outreach tracker'},{yes:true,text:'Add your own brands'},{yes:true,text:'Status updates'}]},
+       {label:'Outreach',items:[{yes:true,text:'Basic email templates'},{yes:false,text:'AI email writer'},{yes:false,text:'Analytics'}]},
+       {label:'Creator Tools',items:[{yes:false,text:'Media kit builder'},{yes:false,text:'Contract templates'},{yes:false,text:'Pricing calculator'}]},
+     ]},
+    {tag:'Starter',tagColor:'var(--nude-d)',name:'Starter',tagline:'Real tools to land your first deals',price:fmtPrice(p.starter),billed:p.label,featured:false,btnClass:'btn-outline',btnText:'Choose Starter',
+     groups:[
+       {label:'Brands',items:[{yes:true,text:'50 brand contacts'},{yes:true,text:'Unlimited pitches'},{yes:false,text:'Full brand directory'}]},
+       {label:'Organization',items:[{yes:true,text:'Full outreach tracker'},{yes:true,text:'Add your own brands'},{yes:true,text:'Follow-up reminders'}]},
+       {label:'Outreach',items:[{yes:true,text:'Email templates'},{yes:false,text:'AI email writer'},{yes:false,text:'Analytics dashboard'}]},
+       {label:'Creator Tools',items:[{yes:true,text:'Pricing calculator'},{yes:false,text:'Media kit builder'},{yes:false,text:'Contract templates'}]},
+     ]},
+    {tag:'Most popular',tagColor:'var(--mint)',name:'Pro',tagline:'Everything to scale your brand deals',price:fmtPrice(p.pro),billed:p.label,featured:true,btnClass:'btn-mint',btnText:'Choose Pro',
+     groups:[
+       {label:'Brands',items:[{yes:true,text:'200 brand contacts'},{yes:true,text:'Unlimited pitches'},{yes:false,text:'Full brand directory'}]},
+       {label:'Organization',items:[{yes:true,text:'Full outreach tracker'},{yes:true,text:'Add your own brands'},{yes:true,text:'Follow-up reminders'}]},
+       {label:'Outreach',items:[{yes:true,text:'AI email writer'},{yes:true,text:'Analytics dashboard'},{yes:true,text:'Tone + goal selector'}]},
+       {label:'Creator Tools',items:[{yes:true,text:'Media kit builder'},{yes:true,text:'Contract templates'},{yes:true,text:'Pricing calculator'}]},
+     ]},
+    {tag:'Top tier',tagColor:'var(--text)',name:'Elite',tagline:'Full access for creators going all in',price:fmtPrice(p.elite),billed:p.label,featured:false,btnClass:'btn-outline',btnText:'Choose Elite',
+     groups:[
+       {label:'Brands',items:[{yes:true,text:'Full directory 500+'},{yes:true,text:'New brands weekly'},{yes:true,text:'Unlimited pitches'}]},
+       {label:'Organization',items:[{yes:true,text:'Full outreach tracker'},{yes:true,text:'Add your own brands'},{yes:true,text:'Follow-up reminders'}]},
+       {label:'Outreach',items:[{yes:true,text:'AI email writer'},{yes:true,text:'Advanced analytics'},{yes:true,text:'Tone + goal selector'}]},
+       {label:'Creator Tools',items:[{yes:true,text:'Custom media kit'},{yes:true,text:'Custom contracts'},{yes:true,text:'Pricing calculator'}]},
+       {label:'Elite Only',items:[{yes:true,text:'Priority support'},{yes:true,text:'Early new features'},{yes:true,text:'Monthly brand drops'}]},
+     ]},
+  ];
+  document.getElementById('pricing-grid').innerHTML=tiers.map(function(t){
+    var groups=t.groups.map(function(g){
+      var items=g.items.map(function(item){
+        var cls=item.yes===true?'yes':item.yes==='partial'?'yes':'no';
+        var icon=item.yes===true?'✓':item.yes==='partial'?'~':'✗';
+        return '<div class="fi '+cls+'"><span class="fi-icon">'+icon+'</span>'+item.text+'</div>';
+      }).join('');
+      return '<div class="feat-group"><div class="fg-label">'+g.label+'</div>'+items+'</div>';
+    }).join('');
+    var popBadge=t.featured?'<div class="pop-badge">'+t.tag+'</div>':'<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:'+t.tagColor+';margin-bottom:6px">'+t.tag+'</div>';
+    return '<div class="tier-card'+(t.featured?' featured':'')+'">'+popBadge+
+      '<div class="tier-name">'+t.name+'</div>'+
+      '<div class="tier-tagline">'+t.tagline+'</div>'+
+      '<div class="tier-price'+(t.featured?' mint':'')+'">'+t.price+'<span style="font-size:13px;color:var(--text2);font-weight:400"> /mo</span></div>'+
+      '<div class="tier-billed">'+t.billed+'</div>'+
+      '<div style="border-top:1px solid var(--border);padding-top:12px;flex:1">'+groups+'</div>'+
+      '<button class="btn '+t.btnClass+' btn-full" style="margin-top:14px">'+t.btnText+'</button></div>';
+  }).join('');
+}
+
+function setBill(c,el){
+  currentBill=c;
+  document.querySelectorAll('#bill-pills .pill').forEach(function(p){p.classList.remove('on');});
+  el.classList.add('on');
+  renderPricing();
+}
+renderPricing();
+
+// COMPARE TABLE
+var COMPARE=[
+  ['Brand contacts','10','50','200','500+'],
+  ['Monthly pitches','3','∞','∞','∞'],
+  ['Outreach tracker','✓','✓','✓','✓'],
+  ['Add your own brands','✓','✓','✓','✓'],
+  ['Email templates','✓','✓','✓','✓'],
+  ['Pricing calculator','✗','✓','✓','✓'],
+  ['AI email writer','✗','✗','✓','✓'],
+  ['Analytics dashboard','✗','✗','✓','✓'],
+  ['Media kit builder','✗','✗','✓','✓'],
+  ['Contract templates','✗','✗','✓','✓'],
+  ['Full directory 500+','✗','✗','✗','✓'],
+  ['Priority support','✗','✗','✗','✓'],
+  ['Early new features','✗','✗','✗','✓'],
+];
+document.getElementById('compare-tbody').innerHTML=COMPARE.map(function(r,i){
+  var bg=i%2===0?'var(--bg)':'transparent';
+  var cells=r.slice(1).map(function(v){
+    var cls=v==='✓'?'cv-check':v==='✗'?'cv-x':'cv-val';
+    return '<td class="'+cls+'">'+v+'</td>';
+  }).join('');
+  return '<tr style="background:'+bg+'"><td>'+r[0]+'</td>'+cells+'</tr>';
+}).join('');
+</script>
+</body>
+</html>

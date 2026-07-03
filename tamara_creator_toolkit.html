@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tamara Lincoln | Creator Toolkit</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #0a0a0a; color: #fff; }
+
+  /* NAV */
+  nav { background: #000; border-bottom: 2px solid #e8192c; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+  .nav-logo span { color: #e8192c; }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-links button { background: none; border: 1px solid #333; color: #aaa; padding: 7px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+  .nav-links button:hover, .nav-links button.active { background: #e8192c; border-color: #e8192c; color: #fff; }
+
+  /* PAGES */
+  .page { display: none; max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #1a0000, #000); border: 1px solid #e8192c33; border-radius: 16px; padding: 48px; margin-bottom: 32px; text-align: center; }
+  .hero-tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #e8192c; margin-bottom: 12px; }
+  .hero h1 { font-size: 48px; font-weight: 900; margin-bottom: 8px; }
+  .hero h1 span { color: #e8192c; }
+  .hero-sub { color: #888; font-size: 15px; margin-bottom: 32px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat-box { background: #111; border: 1px solid #222; border-radius: 12px; padding: 20px; }
+  .stat-num { font-size: 28px; font-weight: 700; color: #fff; }
+  .stat-lbl { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+  /* CARDS */
+  .card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 28px; margin-bottom: 20px; }
+  .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #e8192c; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 14px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-key { color: #888; }
+  .info-val { color: #fff; font-weight: 500; }
+  .badge { background: #1a3a1a; color: #4caf50; font-size: 11px; padding: 3px 8px; border-radius: 20px; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12px; color: #888; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+  .field input, .field select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 14px; border-radius: 8px; font-size: 14px; font-family: inherit; }
+  .field input:focus, .field select:focus { outline: none; border-color: #e8192c; }
+  .field input::placeholder { color: #555; }
+  .field select option { background: #1a1a1a; }
+
+  /* PILLS */
+  .pill-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .pill { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 7px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; font-family: inherit; transition: all 0.2s; }
+  .pill.on, .pill:hover { background: #e8192c; border-color: #e8192c; color: #fff; }
+
+  /* BUTTONS */
+  .btn-red { width: 100%; background: #e8192c; color: #fff; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+  .btn-red:hover { opacity: 0.88; }
+  .btn-outline { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-outline:hover { border-color: #e8192c; color: #e8192c; }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+
+  /* EMAIL PREVIEW */
+  .email-preview { display: none; margin-top: 20px; }
+  .email-preview.on { display: block; }
+  .email-meta { background: #1a1a1a; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
+  .email-meta-row { font-size: 13px; color: #888; margin-bottom: 4px; }
+  .email-meta-row span { color: #fff; font-weight: 500; }
+  .email-body { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 20px; font-size: 14px; line-height: 1.85; color: #ddd; white-space: pre-line; min-height: 200px; outline: none; }
+  .email-body:focus { border-color: #e8192c33; }
+
+  /* TRACKER */
+  .tracker-head { display: grid; grid-template-columns: 2fr 2fr 1.2fr 1fr; gap: 8px; padding: 10px 14px; background: #1a1a1a; border-radius: 8px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-bottom: 8px; }
+  .tracker-row { display: grid; grid-template-columns: 2fr 2fr 1.2fr 1fr; gap: 8px; padding: 12px 14px; background: #111; border: 1px solid #1e1e1e; border-radius: 8px; margin-bottom: 6px; align-items: center; font-size: 13px; }
+  .t-brand { font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .t-email { color: #666; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .t-status select { background: #1a1a1a; border: 1px solid #333; color: #fff; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-family: inherit; cursor: pointer; }
+  .t-cat { color: #888; font-size: 12px; }
+  .empty { text-align: center; color: #555; font-size: 14px; padding: 40px 0; }
+
+  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: #e8192c; margin-bottom: 12px; }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Tamara <span>Lincoln</span></div>
+  <div class="nav-links">
+    <button class="active" onclick="showPage('kit', this)">Media Kit</button>
+    <button onclick="showPage('email', this)">Email Composer</button>
+    <button onclick="showPage('tracker', this)">Outreach Tracker</button>
+  </div>
+</nav>
+
+<!-- MEDIA KIT -->
+<div id="page-kit" class="page active">
+  <div class="hero">
+    <div class="hero-tag">Creator Media Kit · 2026</div>
+    <h1>Tamara <span>Lincoln</span></h1>
+    <div class="hero-sub">@__deinfluencer_ · Lifestyle, Hair & Beauty Creator · Michigan</div>
+    <div class="stats-grid">
+      <div class="stat-box"><div class="stat-num">1,116</div><div class="stat-lbl">TikTok Followers</div></div>
+      <div class="stat-box"><div class="stat-num">3,513</div><div class="stat-lbl">Instagram Followers</div></div>
+      <div class="stat-box"><div class="stat-num">2,400</div><div class="stat-lbl">Facebook Followers</div></div>
+      <div class="stat-box"><div class="stat-num">829</div><div class="stat-lbl">YouTube Subscribers</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Platform Performance</h3>
+    <div class="info-row"><span class="info-key">TikTok views (1 year)</span><span class="info-val">190,000+ <span class="badge">↑ Growing</span></span></div>
+    <div class="info-row"><span class="info-key">Instagram views (60 days)</span><span class="info-val">58,658</span></div>
+    <div class="info-row"><span class="info-key">Instagram accounts reached</span><span class="info-val">2,796 <span class="badge">+22.4%</span></span></div>
+    <div class="info-row"><span class="info-key">Facebook views (30 days)</span><span class="info-val">21,500</span></div>
+    <div class="info-row"><span class="info-key">New Instagram followers</span><span class="info-val">+141 this month</span></div>
+    <div class="info-row"><span class="info-key">TikTok traffic source</span><span class="info-val">91.9% Search</span></div>
+  </div>
+
+  <div class="card">
+    <h3>What I Offer Brands</h3>
+    <div class="info-row"><span class="info-key">TikTok videos</span><span class="info-val">2 dedicated videos</span></div>
+    <div class="info-row"><span class="info-key">Instagram Reel</span><span class="info-val">1 Reel cross-posted to Facebook</span></div>
+    <div class="info-row"><span class="info-key">YouTube</span><span class="info-val">Unboxing / review video</span></div>
+    <div class="info-row"><span class="info-key">5-star review</span><span class="info-val">Posted on brand platform</span></div>
+    <div class="info-row"><span class="info-key">Bio link</span><span class="info-val">30 days</span></div>
+    <div class="info-row"><span class="info-key">Partnership types</span><span class="info-val">Gifted PR · Commission · Paid</span></div>
+  </div>
+
+  <div class="card">
+    <h3>Contact</h3>
+    <div class="info-row"><span class="info-key">Email</span><span class="info-val">tamara.lincoln.ugc@gmail.com</span></div>
+    <div class="info-row"><span class="info-key">TikTok & Instagram</span><span class="info-val">@__deinfluencer_</span></div>
+    <div class="info-row"><span class="info-key">YouTube</span><span class="info-val">@De_Influencerr</span></div>
+    <div class="info-row"><span class="info-key">Facebook</span><span class="info-val">Tamara Lincoln</span></div>
+  </div>
+</div>
+
+<!-- EMAIL COMPOSER -->
+<div id="page-email" class="page">
+  <div class="section-label" style="margin-bottom:24px">Email Composer</div>
+
+  <div class="card">
+    <h3>Brand Info</h3>
+    <div class="form-grid">
+      <div class="field"><label>Brand Name *</label><input type="text" id="bname" placeholder="e.g. Espive Hair" /></div>
+      <div class="field"><label>Their Email *</label><input type="email" id="bemail" placeholder="e.g. espivehair@gmail.com" /></div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Brand Type</label>
+        <select id="btype">
+          <option value="wig">Wig / Hair Brand</option>
+          <option value="beauty">Beauty / Skincare</option>
+          <option value="makeup">Makeup / Cosmetics</option>
+          <option value="fashion">Fashion / Clothing</option>
+          <option value="lifestyle">Lifestyle / Wellness</option>
+        </select>
+      </div>
+      <div class="field"><label>Something you like about them</label><input type="text" id="bdetail" placeholder="e.g. love how natural the wigs look" /></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>What Are You Asking For?</h3>
+    <div class="pill-row" id="goal-pills">
+      <button class="pill on" onclick="setGoal('free',this)">Free PR / Gifted Product</button>
+      <button class="pill" onclick="setGoal('commission',this)">Commission Deal</button>
+      <button class="pill" onclick="setGoal('paid',this)">Paid Collab</button>
+      <button class="pill" onclick="setGoal('any',this)">Open to Anything</button>
+    </div>
+    <h3 style="margin-top:16px">Tone</h3>
+    <div class="pill-row" id="tone-pills">
+      <button class="pill on" onclick="setTone('warm',this)">Warm & Friendly</button>
+      <button class="pill" onclick="setTone('professional',this)">Professional</button>
+      <button class="pill" onclick="setTone('bold',this)">Bold & Confident</button>
+      <button class="pill" onclick="setTone('casual',this)">Casual</button>
+    </div>
+    <button class="btn-red" onclick="buildEmail()">✉ Build My Email</button>
+  </div>
+
+  <div class="email-preview" id="email-preview">
+    <div class="card">
+      <h3>Your Email — Edit Before Sending</h3>
+      <div class="email-meta">
+        <div class="email-meta-row">To: <span id="prev-to">—</span></div>
+        <div class="email-meta-row">Subject: <span id="prev-subj">—</span></div>
+      </div>
+      <div class="email-body" id="prev-body" contenteditable="true" spellcheck="true"></div>
+      <p style="font-size:12px;color:#555;margin-top:10px">💡 Tap to edit. Add 2–3 links to your best videos at the bottom before sending.</p>
+      <div class="btn-row">
+        <button class="btn-outline" onclick="openGmail()">📧 Open in Gmail</button>
+        <button class="btn-outline" onclick="copyEmail()">📋 Copy Email</button>
+        <button class="btn-outline" onclick="addToTracker()">➕ Add to Tracker</button>
+        <button class="btn-outline" onclick="buildEmail()">🔄 Rebuild</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="page-tracker" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div class="section-label" style="margin:0">Outreach Tracker</div>
+    <button class="btn-outline" onclick="toggleAddForm()">+ Add Brand</button>
+  </div>
+
+  <div class="card" id="add-form" style="display:none;margin-bottom:20px">
+    <h3>Add New Brand</h3>
+    <div class="form-grid">
+      <div class="field"><label>Brand Name</label><input type="text" id="new-brand" placeholder="Brand name" /></div>
+      <div class="field"><label>Email</label><input type="text" id="new-email" placeholder="their@email.com" /></div>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Category</label>
+        <select id="new-cat">
+          <option>Wig / Hair</option>
+          <option>Beauty</option>
+          <option>Makeup</option>
+          <option>Fashion</option>
+          <option>Lifestyle</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="new-status">
+          <option>Not contacted</option>
+          <option>Email sent</option>
+          <option>Replied</option>
+          <option>No response</option>
+          <option>Deal closed!</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-red" onclick="addEntry()" style="margin-top:8px">Save Brand</button>
+  </div>
+
+  <div class="filter-row">
+    <button class="pill on" onclick="setFilter('All',this)">All</button>
+    <button class="pill" onclick="setFilter('Not contacted',this)">Not contacted</button>
+    <button class="pill" onclick="setFilter('Email sent',this)">Sent</button>
+    <button class="pill" onclick="setFilter('Replied',this)">Replied</button>
+    <button class="pill" onclick="setFilter('No response',this)">No response</button>
+    <button class="pill" onclick="setFilter('Deal closed!',this)">Deals closed 🎉</button>
+  </div>
+
+  <div class="tracker-head">
+    <span>Brand</span><span>Email</span><span>Status</span><span>Category</span>
+  </div>
+  <div id="tracker-list"></div>
+</div>
+
+<script>
+// ── NAV ──
+function showPage(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── EMAIL ──
+let goal = 'free', tone = 'warm';
+function setGoal(g, el) { goal = g; document.querySelectorAll('#goal-pills .pill').forEach(p => p.classList.remove('on')); el.classList.add('on'); }
+function setTone(t, el) { tone = t; document.querySelectorAll('#tone-pills .pill').forEach(p => p.classList.remove('on')); el.classList.add('on'); }
+
+function buildEmail() {
+  const name = document.getElementById('bname').value.trim();
+  const email = document.getElementById('bemail').value.trim();
+  const type = document.getElementById('btype').value;
+  const detail = document.getElementById('bdetail').value.trim();
+  if (!name) { document.getElementById('bname').focus(); return; }
+
+  const greetMap = { warm: 'Hi ' + name + ' Team! 💕', professional: 'Hello ' + name + ' Team,', bold: 'Hey ' + name + '!', casual: 'Hey! 👋' };
+  const productWord = type === 'wig' ? 'wigs' : 'products';
+  const nicheWord = type === 'wig' ? 'hair and lifestyle' : 'beauty and lifestyle';
+
+  const introMap = {
+    warm: 'My name is Tamara Lincoln and I absolutely love what ' + name + ' is doing' + (detail ? ' — especially ' + detail + '!' : '!') + ' I create ' + nicheWord + ' content as @__deinfluencer_ on TikTok and Instagram.',
+    professional: 'My name is Tamara Lincoln, a ' + nicheWord + ' content creator (TikTok/Instagram: @__deinfluencer_). I am reaching out regarding a potential collaboration with ' + name + (detail ? ', and I particularly admire ' + detail : '') + '.',
+    bold: 'I\'m Tamara Lincoln — @__deinfluencer_ on TikTok and Instagram — and I want to work with ' + name + (detail ? '. I love ' + detail : '') + ' and I know I can bring real value to your brand.',
+    casual: 'I\'m Tamara — @__deinfluencer_ on TikTok and Instagram — and I\'ve been lowkey obsessed with ' + name + (detail ? ' (especially ' + detail + ')' : '') + '. I would love to collab!'
+  };
+
+  const goalMap = {
+    free: 'I would love to create content featuring your ' + productWord + ' completely free of charge in exchange for a gifted item.',
+    commission: 'I would love to set up a commission or affiliate arrangement where I promote your ' + productWord + ' and earn based on the sales I drive.',
+    paid: 'I am interested in a paid collaboration to create dedicated content featuring your ' + productWord + '.',
+    any: 'I am open to gifted PR, commission/affiliate, or a paid collaboration — whatever works best for you!'
+  };
+
+  const stats = 'A little about my reach:\n• TikTok: 1,116 followers · 190K+ views this past year\n• Instagram: 3,513 followers · 58K+ views in 60 days\n• Facebook: 2,400 followers\n• YouTube: 829 subscribers\n\nMy viral "Detroit" content series hit 19K+ views and was reshared by local pages.';
+
+  const offer = 'Here\'s what I\'ll create for you:\n• 2 TikTok videos (unboxing, styling, honest review)\n• 1 Instagram Reel cross-posted to Facebook\n• YouTube unboxing/review\n• A 5-star review on your platform\n• Your link in my bio for 30 days';
+
+  const closeMap = {
+    warm: 'I have included examples of my content so you can see my style. I would love to hear from you — just reply and we can make it happen! 🙏',
+    professional: 'I have attached examples of my previous content for your review. I look forward to the possibility of working together.',
+    bold: 'Check out my content examples below — I think you will see exactly why this collab makes sense. Let\'s talk!',
+    casual: 'I attached some of my videos so you can see my vibe. Lmk if you\'re interested, I would love to make this happen!'
+  };
+
+  const sig = 'Tamara Lincoln\n@__deinfluencer_ · TikTok & Instagram\n@De_Influencerr · YouTube\ntamara.lincoln.ugc@gmail.com';
+  const subjMap = { wig: 'Collaboration Inquiry — Tamara Lincoln x ' + name, beauty: 'UGC Creator Collab — Tamara Lincoln (@__deinfluencer_)', makeup: 'Creator Collab Inquiry — @__deinfluencer_', fashion: 'Creator Collaboration — Tamara Lincoln x ' + name, lifestyle: 'Creator Collab Inquiry — Tamara Lincoln x ' + name };
+
+  const body = greetMap[tone] + '\n\n' + introMap[tone] + '\n\n' + stats + '\n\n' + goalMap[goal] + '\n\n' + offer + '\n\n' + closeMap[tone] + '\n\nWarmly,\n' + sig;
+
+  document.getElementById('prev-to').textContent = email || '[paste email here]';
+  document.getElementById('prev-subj').textContent = subjMap[type];
+  document.getElementById('prev-body').innerText = body;
+  document.getElementById('email-preview').classList.add('on');
+  document.getElementById('email-preview').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openGmail() {
+  const to = document.getElementById('bemail').value.trim();
+  const subj = encodeURIComponent(document.getElementById('prev-subj').textContent);
+  const body = encodeURIComponent(document.getElementById('prev-body').innerText);
+  window.open('https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + subj + '&body=' + body, '_blank');
+}
+
+function copyEmail() {
+  const full = 'To: ' + document.getElementById('prev-to').textContent + '\nSubject: ' + document.getElementById('prev-subj').textContent + '\n\n' + document.getElementById('prev-body').innerText;
+  navigator.clipboard.writeText(full).catch(() => {});
+  alert('Copied to clipboard!');
+}
+
+// ── TRACKER ──
+let entries = [
+  {brand:'Espive Hair', email:'espivehair@gmail.com', status:'Not contacted', cat:'Wig / Hair'},
+  {brand:'Lady Gray Wigs', email:'pr@ladygrayy.com', status:'Not contacted', cat:'Wig / Hair'},
+  {brand:'Charmanty', email:'charmantyofficial@gmail.com', status:'Not contacted', cat:'Wig / Hair'},
+  {brand:'Curl Queen', email:'curlsqueenin@gmail.com', status:'Not contacted', cat:'Wig / Hair'},
+  {brand:'Glow Recipe', email:'love@hellobubble.com', status:'Not contacted', cat:'Beauty'},
+  {brand:'Saie Cosmetics', email:'community@saiehello.com', status:'Not contacted', cat:'Beauty'},
+  {brand:'Rare Beauty', email:'hello@rarebeauty.com', status:'Not contacted', cat:'Beauty'},
+  {brand:'NARS Cosmetics', email:'pr@narscosmetics.com', status:'Not contacted', cat:'Makeup'},
+  {brand:'Elf Cosmetics', email:'elfpartners@elfcosmetics.com', status:'Not contacted', cat:'Makeup'},
+  {brand:'YSL Beauty', email:'press@yslbeauty.com', status:'Not contacted', cat:'Beauty'},
+];
+let currentFilter = 'All';
+
+function addToTracker() {
+  const name = document.getElementById('bname').value.trim();
+  const email = document.getElementById('bemail').value.trim();
+  const type = document.getElementById('btype').options[document.getElementById('btype').selectedIndex].text;
+  if (!name) return;
+  entries.unshift({brand: name, email: email, status: 'Email sent', cat: type});
+  alert(name + ' added to your tracker!');
+  renderTracker();
+}
+
+function toggleAddForm() {
+  const f = document.getElementById('add-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function addEntry() {
+  const b = document.getElementById('new-brand').value.trim();
+  if (!b) return;
+  entries.unshift({ brand: b, email: document.getElementById('new-email').value.trim(), status: document.getElementById('new-status').value, cat: document.getElementById('new-cat').value });
+  document.getElementById('new-brand').value = '';
+  document.getElementById('new-email').value = '';
+  document.getElementById('add-form').style.display = 'none';
+  renderTracker();
+}
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-row .pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  renderTracker();
+}
+
+function changeStatus(i, val) { entries[i].status = val; }
+
+function renderTracker() {
+  const list = document.getElementById('tracker-list');
+  const shown = currentFilter === 'All' ? entries : entries.filter(e => e.status === currentFilter);
+  if (!shown.length) { list.innerHTML = '<div class="empty">No entries yet</div>'; return; }
+  list.innerHTML = shown.map((e, i) => {
+    const ri = entries.indexOf(e);
+    return '<div class="tracker-row"><span class="t-brand">' + e.brand + '</span><span class="t-email">' + (e.email || '—') + '</span><span class="t-status"><select onchange="changeStatus(' + ri + ',this.value)"><option' + (e.status==='Not contacted'?' selected':'') + '>Not contacted</option><option' + (e.status==='Email sent'?' selected':'') + '>Email sent</option><option' + (e.status==='Replied'?' selected':'') + '>Replied</option><option' + (e.status==='No response'?' selected':'') + '>No response</option><option' + (e.status==='Deal closed!'?' selected':'') + '>Deal closed!</option></select></span><span class="t-cat">' + e.cat + '</span></div>';
+  }).join('');
+}
+
+renderTracker();
+</script>
+</body>
+</html>
